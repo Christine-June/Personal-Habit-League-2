@@ -56,7 +56,7 @@ export default function SideBar() {
           className="mb-8 p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 w-fit cursor-pointer"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <span className="text-xl font-bold">HL</span>
+          <span className="text-xl font-bold">Habit League</span>
         </div>
 
         {/* Navigation */}
