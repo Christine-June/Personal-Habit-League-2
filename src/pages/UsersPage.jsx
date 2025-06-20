@@ -55,3 +55,13 @@ export default function UsersPage() {
     </section>
   );
 }
+
+function Skeleton() {
+  return (
+    <div className="grid gap-4 md:grid-cols-3 p-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="h-44 rounded-xl bg-zinc-800 animate-pulse" />
+      ))}
+    </div>
+  );
+}
