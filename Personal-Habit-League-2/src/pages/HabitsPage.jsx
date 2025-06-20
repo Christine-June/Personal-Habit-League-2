@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getHabits, joinHabit } from '../api'; // Make sure this path is correct
-import { Button } from '@/components/ui/button'; // Optional: if using shadcn/ui
+import { getHabits, joinHabit } from '../api'; 
+import { Button } from '@/components/ui/button'; 
 import { Card, CardContent } from '@/components/ui/card';
 
 const HabitsPage = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [joined, setJoined] = useState({}); // Track which habits are joined
+  const [joined, setJoined] = useState({}); 
 
   useEffect(() => {
     fetchHabits();
