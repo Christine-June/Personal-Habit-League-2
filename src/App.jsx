@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import DarkModeToggle from './components/DarkModeToggle';
-import './App.css';
+import './index.css';
 
 import HomePage from './pages/HomePage';
 import UsersPage from './pages/UsersPage';
