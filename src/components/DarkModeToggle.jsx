@@ -14,4 +14,6 @@ export default function DarkModeToggle() {
         <span className="text-blue-400">🌙</span>
       )}
     </button>
-  );
+    );
+  
+  }
