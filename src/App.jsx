@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { ThemeProvider } from './context/ThemeContext';
+import DarkModeToggle from './components/DarkModeToggle';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,7 +9,10 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <ThemeProvider>
+      <div className="absolute top-4 right-4">
+        <DarkModeToggle />
+      </div>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -28,7 +33,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+    </ThemeProvider>
   )
 }
 
