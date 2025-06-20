@@ -1,5 +1,4 @@
 import { useTheme } from '../context/ThemeContext';
-
 export default function DarkModeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -16,4 +15,3 @@ export default function DarkModeToggle() {
       )}
     </button>
   );
-}
