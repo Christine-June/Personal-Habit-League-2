@@ -65,3 +65,11 @@ function Skeleton() {
     </div>
   );
 }
+function ErrorState({ message }) {
+  return (
+    <div className="py-10 text-center text-red-500">
+      <p>Couldn’t fetch users.</p>
+      <p className="text-sm">{message}</p>
+    </div>
+  );
+}
