@@ -18,17 +18,18 @@ import Footer from './components/Footer';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+
   return (
     <ThemeProvider>
       <Router>
         <div className="min-h-screen flex flex-col md:flex-row">
-          <SideBar />
+          <SideBar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} />
           <div className="flex-1 flex flex-col">
-            <Navbar />
-            <DarkModeToggle />
+            <Navbar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
             <div className="flex-grow">
               <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/habits" element={<HabitsPage />} />
                 <Route path="/challenges" element={<ChallengesPage />} />
@@ -38,7 +39,7 @@ function App() {
                 <Route path="/habit-entries" element={<HabitEntriesPage />} />
               </Routes>
             </div>
-            <Footer />
+            <Footer sidebarExpanded={sidebarExpanded} />
           </div>
         </div>
       </Router>
