@@ -20,8 +20,7 @@ export const getUserHabits = (userId) =>
   axios.get(`${BASE_URL}/users/${userId}/habits`).then(res => res.data);
 
 // Habit Entries
-export const getHabitEntries = () =>
-  axios.get(`${BASE_URL}/habit-entries`).then(res => res.data);
-
+export const getHabitEntries = (params = {}) =>
+  axios.get(`${BASE_URL}/habit-entries`, { params }).then(res => res.data);
 export const createHabitEntry = (entry) =>
-  axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
+  axios.post('http://localhost:5000/habit-entries', entry).then(res => res.data);
