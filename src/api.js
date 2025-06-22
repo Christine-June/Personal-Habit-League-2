@@ -1,21 +1,25 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000'; 
+const BASE_URL = 'http://localhost:5000';
 
+// Habits
 export const getHabits = () => axios.get(`${BASE_URL}/habits`);
 
 export const joinHabit = (habitId) =>
   axios.post(`${BASE_URL}/habits/${habitId}/join`);
 
-//export const getChallengeParticipants = (challengeId) =>
-//axios.get(`http://localhost:5000/challenges/${challengeId}/participants`);
+// Challenges
+export const getChallengeParticipants = (challengeId) =>
+  axios.get(`${BASE_URL}/challenges/${challengeId}/participants`);
 
-//export const addParticipantToChallenge = (challengeId, data) =>
-//axios.post(`http://localhost:5000/challenges/${challengeId}/participants`, data);
+export const addParticipantToChallenge = (challengeId, data) =>
+  axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data);
 
+// User Habits
 export const getUserHabits = (userId) =>
   axios.get(`${BASE_URL}/users/${userId}/habits`).then(res => res.data);
 
+// Habit Entries
 export const getHabitEntries = () =>
   axios.get(`${BASE_URL}/habit-entries`).then(res => res.data);
 
