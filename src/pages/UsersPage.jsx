@@ -11,7 +11,7 @@ export default function UsersPage() {
   useEffect(() => {
     let cancelled = false;
 
-    fetch('/api/users')   
+    fetch('http://localhost:5000/users')  // ✅ absolute backend path
       .then(r => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
