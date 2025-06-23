@@ -33,7 +33,7 @@ export default function HomePage({ sidebarExpanded }) {
             </button>
             <button
               className="bg-pink-400 text-white py-3 rounded-xl hover:bg-pink-500 transition"
-              onClick={() => navigate('/track')}
+              onClick={() => navigate('/habits')}
             >
               Track Today's Habit
             </button>

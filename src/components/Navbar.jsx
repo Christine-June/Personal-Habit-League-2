@@ -36,12 +36,6 @@ export default function Navbar({ sidebarExpanded }) {
           <Link to="/challenges" className="hover:text-blue-500 transition-colors">
             Challenges
           </Link>
-          <Link to="/challenge-participants" className="hover:text-blue-500 transition-colors">
-            Participants
-          </Link>
-          <Link to="/challenge-entries" className="hover:text-blue-500 transition-colors">
-            Challenge Entries
-          </Link>
           <Link to="/users" className="hover:text-blue-500 transition-colors">
             Community
           </Link>
