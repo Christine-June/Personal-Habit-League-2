@@ -20,6 +20,10 @@ export default function SideBar({ expanded, setExpanded }) {
     { path: '/habit-entries', name: 'Progress', icon: '📊', hoverText: 'Your progress' },
     { path: '/challenges', name: 'Challenges', icon: '🏆', hoverText: 'Join challenges' },
     { path: '/users', name: 'Community', icon: '👥', hoverText: 'Connect with others' },
+    // Add legal links
+    { path: '/privacy', name: 'Privacy Policy', icon: '🔒', hoverText: 'Privacy Policy' },
+    { path: '/terms', name: 'Terms of Service', icon: '📄', hoverText: 'Terms of Service' },
+    { path: '/cookies', name: 'Cookie Settings', icon: '🍪', hoverText: 'Cookie Settings' },
   ];
 
   // Hover expand/collapse logic

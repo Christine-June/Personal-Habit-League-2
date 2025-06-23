@@ -15,6 +15,9 @@ import ChallengeEntriesPage from './pages/ChallengeEntriesPage';
 import HabitEntriesPage from './pages/HabitEntriesPage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import CookieSettings from './pages/CookieSettings'; // Import the new CookieSettings component
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -38,6 +41,9 @@ function App() {
                 <Route path="/challenge-participants" element={<ChallengeParticipantsPage />} />
                 <Route path="/challenge-entries" element={<ChallengeEntriesPage />} />
                 <Route path="/habit-entries" element={<HabitEntriesPage />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/cookies" element={<CookieSettings />} /> {/* Add the new route here */}
               </Routes>
             </div>
             <Footer sidebarExpanded={sidebarExpanded} />

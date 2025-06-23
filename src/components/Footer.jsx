@@ -40,16 +40,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Legal Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">Legal</h3>
-            <ul className="space-y-2">
-              <li><a href="/privacy" className="text-gray-600 hover:text-indigo-600 transition">Privacy Policy</a></li>
-              <li><a href="/terms" className="text-gray-600 hover:text-indigo-600 transition">Terms of Service</a></li>
-              <li><a href="/cookies" className="text-gray-600 hover:text-indigo-600 transition">Cookie Settings</a></li>
-            </ul>
-          </div>
-
           {/* Contact */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Connect</h3>
