@@ -1,6 +1,9 @@
 // src/App.jsx
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import ToastConfig from './components/ToastConfig';
+
 
 import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
@@ -66,6 +69,8 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <Toaster position="top-right" />
+        <ToastConfig />
         <AppContent />
       </Router>
     </ThemeProvider>

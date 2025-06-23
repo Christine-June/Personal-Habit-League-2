@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import toast from 'react-hot-toast'; // ✅ Toast import
 import { getUserHabits } from '../api';
 import HabitCard from '../components/HabitCard';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -14,14 +15,20 @@ const UserHabitsPage = () => {
 
   useEffect(() => {
     const fetchUserHabits = async () => {
+      toast.loading('Loading user habits...'); // ✅ show loading toast
+
       try {
         setLoading(true);
         const data = await getUserHabits(userId);
         setHabits(data.habits);
         setUserInfo(data.user);
         setError(null);
+        toast.dismiss(); // ✅ remove loading
+        toast.success('User habits loaded!');
       } catch (err) {
         setError(err.message || 'Failed to fetch user habits');
+        toast.dismiss(); // ✅ remove loading
+        toast.error(`Error: ${err.message || 'Unable to fetch user habits'}`);
       } finally {
         setLoading(false);
       }
@@ -79,7 +86,6 @@ const UserHabitsPage = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

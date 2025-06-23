@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast"; // ✅ Toast import
 
 const BASE_URL = "http://localhost:5000";
 
@@ -15,21 +16,26 @@ function AuthPage({ setIsAuthenticated }) {
     const endpoint = formType === "login" ? "/login" : "/signup";
 
     try {
-      console.log("📨 Sending to:", endpoint, formData); // Debug log
+      toast.loading(`${formType === "login" ? "Logging in..." : "Signing up..."}`);
+
       const res = await axios.post(`${BASE_URL}${endpoint}`, formData);
-      console.log("✅ Response:", res); // Debug log
+
+      toast.dismiss();
 
       if (res.data.success) {
-        if (formType === "signup") {
-          alert("Signup successful! Logging in...");
-        }
+        toast.success(
+          formType === "login"
+            ? "Logged in successfully!"
+            : "Signup successful! You're now logged in 🎉"
+        );
         setIsAuthenticated(true);
       } else {
-        alert("Invalid credentials");
+        toast.error("Invalid credentials");
       }
     } catch (err) {
-      console.error("❌ Auth Error:", err); // Debug log
-      alert(err.response?.data?.message || "Authentication failed");
+      toast.dismiss();
+      console.error("❌ Auth Error:", err);
+      toast.error(err.response?.data?.message || "Authentication failed");
     }
   };
 

@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast'; // ✅ Import toast
 
 export default function HabitEntriesPage() {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
+  const [error,   setError]   = useState(null);
 
   useEffect(() => {
     let cancelled = false;
+
+    toast.loading('Loading progress entries...'); // ✅ Toast while loading
 
     fetch('http://localhost:5000/habit-entries')
       .then(res => {
@@ -14,10 +17,18 @@ export default function HabitEntriesPage() {
         return res.json();
       })
       .then(data => {
-        if (!cancelled) setEntries(data.entries || []);
+        if (!cancelled) {
+          setEntries(data.entries || []);
+          toast.dismiss(); // ✅ Dismiss loader
+          toast.success('Progress entries loaded!');
+        }
       })
       .catch(err => {
-        if (!cancelled) setError(err.message);
+        if (!cancelled) {
+          setError(err.message);
+          toast.dismiss();
+          toast.error(`Failed to load: ${err.message}`);
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

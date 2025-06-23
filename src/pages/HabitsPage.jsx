@@ -1,6 +1,13 @@
 // src/pages/HabitsPage.jsx
 import React, { useEffect, useState } from "react";
-import { getHabits, deleteHabit, updateHabit, getUsers, addHabit } from "../api";
+import toast from "react-hot-toast"; // ✅ Toast import
+import {
+  getHabits,
+  deleteHabit,
+  updateHabit,
+  getUsers,
+  addHabit,
+} from "../api";
 import HabitModal from "../components/HabitModal";
 import { MoreVertical } from "lucide-react";
 
@@ -15,27 +22,59 @@ const HabitsPage = () => {
   }, []);
 
   const fetchData = async () => {
-    const habitsData = await getHabits();
-    const usersData = await getUsers();
-    setHabits(habitsData);
-    setUsers(usersData);
+    toast.loading("Loading habits...");
+    try {
+      const habitsData = await getHabits();
+      const usersData = await getUsers();
+      setHabits(habitsData);
+      setUsers(usersData);
+      toast.dismiss();
+      toast.success("Habits loaded successfully!");
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Failed to load habits or users.");
+    }
   };
 
   const handleAddHabit = async (newHabit) => {
-    await addHabit(newHabit);
-    setShowModal(false);
-    fetchData();
+    try {
+      toast.loading("Adding habit...");
+      await addHabit(newHabit);
+      setShowModal(false);
+      await fetchData();
+      toast.dismiss();
+      toast.success("Habit added successfully!");
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Failed to add habit.");
+    }
   };
 
   const handleUpdateHabit = async (updatedHabit) => {
-    await updateHabit(updatedHabit.id, updatedHabit);
-    setEditingHabit(null);
-    fetchData();
+    try {
+      toast.loading("Updating habit...");
+      await updateHabit(updatedHabit.id, updatedHabit);
+      setEditingHabit(null);
+      await fetchData();
+      toast.dismiss();
+      toast.success("Habit updated successfully!");
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Failed to update habit.");
+    }
   };
 
   const handleDeleteHabit = async (habitId) => {
-    await deleteHabit(habitId);
-    fetchData();
+    try {
+      toast.loading("Deleting habit...");
+      await deleteHabit(habitId);
+      await fetchData();
+      toast.dismiss();
+      toast.success("Habit deleted successfully!");
+    } catch (err) {
+      toast.dismiss();
+      toast.error("Failed to delete habit.");
+    }
   };
 
   return (
@@ -76,8 +115,12 @@ const HabitsPage = () => {
             </div>
             <h2 className="text-xl font-semibold">{habit.name}</h2>
             <p className="text-sm text-gray-500 mb-2">{habit.description}</p>
-            <p className="text-sm text-gray-600 font-medium">Frequency: {habit.frequency}</p>
-            <p className="text-sm text-gray-600 font-medium">User: {habit.user_id}</p>
+            <p className="text-sm text-gray-600 font-medium">
+              Frequency: {habit.frequency}
+            </p>
+            <p className="text-sm text-gray-600 font-medium">
+              User: {habit.user_id}
+            </p>
           </div>
         ))}
       </div>
