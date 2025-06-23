@@ -1,3 +1,4 @@
+// src/App.jsx
 import { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import DarkModeToggle from './components/DarkModeToggle';
@@ -27,7 +28,7 @@ function App() {
           <SideBar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} />
           <div className="flex-1 flex flex-col">
             <Navbar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
-            <div className="flex-grow">
+            <div className="flex-grow pt-16 pb-24"> {/* Add top and bottom padding to prevent overlap */}
               <Routes>
                 <Route path="/" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
                 <Route path="/users" element={<UsersPage />} />
