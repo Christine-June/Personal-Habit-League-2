@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import ChallengeForm from '../components/ChallengeForm'; // Create this component
+import ChallengeTable from '../components/ChallengeTable'; // Create this component
 
 export default function ChallengesPage() {
+  const location = useLocation();
+  const [showModal, setShowModal] = useState(location.state?.showNewChallengeModal || false);
   const [challenges, setChallenges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,26 +21,24 @@ export default function ChallengesPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleSave = (newChallenge) => {
+    setChallenges([...challenges, newChallenge]);
+    setShowModal(false);
+  };
+
   if (loading) return <div className="p-4">Loading challenges...</div>;
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
     <div className="p-6">
+      {showModal && (
+        <ChallengeForm
+          onClose={() => setShowModal(false)}
+          onSave={handleSave}
+        />
+      )}
       <h1 className="text-2xl font-bold mb-4">Challenges</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {challenges.map((challenge) => (
-          <div key={challenge.id} className="bg-white rounded-lg shadow p-4">
-            <h2 className="text-lg font-semibold">{challenge.name}</h2>
-            <p className="text-gray-600">{challenge.description}</p>
-            <Link
-              to={`/challenge-entries?challengeId=${challenge.id}`}
-              className="inline-block mt-3 text-blue-600 hover:underline"
-            >
-              View Entries
-            </Link>
-          </div>
-        ))}
-      </div>
+      <ChallengeTable challenges={challenges} />
     </div>
   );
 }
