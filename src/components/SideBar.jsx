@@ -14,24 +14,31 @@ export default function SideBar({ expanded, setExpanded }) {
   const sidebarRef = useRef(null);
   const location = useLocation();
 
+  // ✅ Safely load user from localStorage
+  let user = null;
+  try {
+    const stored = localStorage.getItem("user");
+    if (stored && stored !== "undefined" && stored !== "null") {
+      user = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.warn("Invalid JSON for user in localStorage:", e);
+  }
+
   const navItems = [
-    { path: '/', name: 'Home', icon: '🏠', hoverText: 'Home' },
+    { path: '/home', name: 'Home', icon: '🏠', hoverText: 'Home' },
     { path: '/habits', name: 'Habits', icon: '📝', hoverText: 'Track habits' },
     { path: '/habit-entries', name: 'Progress', icon: '📊', hoverText: 'Your progress' },
     { path: '/challenges', name: 'Challenges', icon: '🏆', hoverText: 'Join challenges' },
     { path: '/users', name: 'Community', icon: '👥', hoverText: 'Connect with others' },
-    // Add legal links
     { path: '/privacy', name: 'Privacy Policy', icon: '🔒', hoverText: 'Privacy Policy' },
     { path: '/terms', name: 'Terms of Service', icon: '📄', hoverText: 'Terms of Service' },
     { path: '/cookies', name: 'Cookie Settings', icon: '🍪', hoverText: 'Cookie Settings' },
   ];
 
-  // Hover expand/collapse logic
   const handleSidebarMouseEnter = () => {
     clearTimeout(expandTimeout);
-    setExpandTimeout(setTimeout(() => {
-      setExpanded(true);
-    }, 150));
+    setExpandTimeout(setTimeout(() => setExpanded(true), 150));
   };
 
   const handleSidebarMouseLeave = () => {
@@ -41,12 +48,9 @@ export default function SideBar({ expanded, setExpanded }) {
     }, 300));
   };
 
-  // Tooltip logic
   const handleItemMouseEnter = (itemPath) => {
     clearTimeout(hoverTimeout);
-    setHoverTimeout(setTimeout(() => {
-      setActiveHover(itemPath);
-    }, 200));
+    setHoverTimeout(setTimeout(() => setActiveHover(itemPath), 200));
   };
 
   const handleItemMouseLeave = () => {
@@ -54,7 +58,6 @@ export default function SideBar({ expanded, setExpanded }) {
     setActiveHover(null);
   };
 
-  // Auto-close on outside click (mobile)
   useEffect(() => {
     function handleClickOutside(event) {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -65,7 +68,6 @@ export default function SideBar({ expanded, setExpanded }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [setExpanded]);
 
-  // Responsive: expand on desktop, collapse on mobile
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) setExpanded(true);
@@ -75,7 +77,6 @@ export default function SideBar({ expanded, setExpanded }) {
     return () => window.removeEventListener('resize', handleResize);
   }, [setExpanded]);
 
-  // Cleanup timeouts
   useEffect(() => {
     return () => {
       clearTimeout(hoverTimeout);
@@ -94,11 +95,11 @@ export default function SideBar({ expanded, setExpanded }) {
         ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}
         border-r ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}
         transition-all duration-300 ease-in-out
-        shadow-lg
+        shadow-lg overflow-y-auto
       `}
     >
       <div className="flex flex-col h-full p-4">
-        {/* Logo and collapse/expand button */}
+        {/* Logo/Header */}
         <div className="flex items-center mb-8">
           <div
             className="p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 w-fit cursor-pointer"
@@ -110,7 +111,6 @@ export default function SideBar({ expanded, setExpanded }) {
           <button
             className="ml-auto md:hidden p-2 rounded hover:bg-gray-200 hover:dark:bg-gray-800"
             onClick={() => setExpanded(!expanded)}
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
           >
             {expanded ? <span>&#10005;</span> : <span>&#9776;</span>}
           </button>
@@ -129,33 +129,18 @@ export default function SideBar({ expanded, setExpanded }) {
                     flex items-center p-3 rounded-full relative
                     ${isActive
                       ? 'bg-blue-100 text-blue-600 font-semibold border-2 border-blue-200'
-                      : 'hover:bg-gray-200 hover:dark:bg-gray-800 text-gray-700 dark:text-gray-200'
-                    }
+                      : 'hover:bg-gray-200 hover:dark:bg-gray-800 text-gray-700 dark:text-gray-200'}
                     transition-all duration-200
                     ${expanded ? 'w-full' : 'w-fit mx-auto'}
                     group
                   `}
                 >
                   <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                  <span className={`
-                    ml-4 transition-all duration-300 ease-in-out
-                    ${expanded ? 'opacity-100 max-w-none' : 'opacity-0 max-w-0 ml-0'}
-                    overflow-hidden whitespace-nowrap
-                  `}>
+                  <span className={`ml-4 transition-all duration-300 ${expanded ? 'opacity-100' : 'opacity-0 max-w-0 ml-0'} overflow-hidden whitespace-nowrap`}>
                     {item.name}
                   </span>
-                  {/* Tooltip for collapsed state */}
                   {!expanded && activeHover === item.path && (
-                    <div className="
-                      absolute left-full ml-2 px-3 py-2 rounded-md shadow-lg
-                      bg-gray-800 text-white border border-gray-600
-                      whitespace-nowrap z-50
-                      opacity-0 animate-fadeIn
-                      before:content-[''] before:absolute before:right-full
-                      before:top-1/2 before:-translate-y-1/2
-                      before:border-4 before:border-transparent
-                      before:border-r-gray-800
-                    ">
+                    <div className="absolute left-full ml-2 px-3 py-2 rounded-md shadow-lg bg-gray-800 text-white border border-gray-600 whitespace-nowrap z-50 animate-fadeIn before:content-[''] before:absolute before:right-full before:top-1/2 before:-translate-y-1/2 before:border-4 before:border-transparent before:border-r-gray-800">
                       {item.hoverText}
                     </div>
                   )}
@@ -165,21 +150,18 @@ export default function SideBar({ expanded, setExpanded }) {
           </ul>
         </nav>
 
-        {/* Feedback Button */}
+        {/* Feedback and Settings */}
         <button
           className="flex items-center gap-2 p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 mt-2"
           onClick={() => setShowFeedback(true)}
-          aria-label="Give feedback"
         >
           <FiMessageCircle className="text-2xl" />
           {expanded && <span>Feedback</span>}
         </button>
 
-        {/* Settings Button */}
         <button
           className="flex items-center gap-2 p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 mt-2"
           onClick={() => setShowSettings(true)}
-          aria-label="Open settings"
         >
           <FiSettings className="text-2xl" />
           {expanded && <span>Settings</span>}
@@ -187,34 +169,39 @@ export default function SideBar({ expanded, setExpanded }) {
 
         {/* User Profile */}
         <div className="mt-auto mb-4">
-          <div className={`
-            flex items-center p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800
-            ${expanded ? 'w-full' : 'w-fit mx-auto'}
-            cursor-pointer transition-all duration-200
-            group
-          `}>
+          <div className={`flex items-center p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 ${expanded ? 'w-full' : 'w-fit mx-auto'} cursor-pointer group`}>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xl">👤</span>
             </div>
-            <div className={`
-              ml-3 transition-all duration-300 ease-in-out
-              ${expanded ? 'opacity-100 max-w-none' : 'opacity-0 max-w-0 ml-0'}
-              overflow-hidden
-            `}>
-              <div className="font-semibold text-gray-800 dark:text-gray-100">User Name</div>
-              <div className="text-sm text-gray-500 dark:text-gray-300">@username</div>
+            <div className={`ml-3 transition-all duration-300 ${expanded ? 'opacity-100' : 'opacity-0 max-w-0 ml-0'} overflow-hidden`}>
+              <div className="font-semibold text-gray-800 dark:text-gray-100">
+                {user?.username || 'Guest'}
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-300">
+                @{user?.username?.toLowerCase() || 'guest'}
+              </div>
+              {user && (
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('user');
+                    window.location.href = '/auth';
+                  }}
+                  className="text-xs text-blue-500 underline mt-1"
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Feedback Modal/Panel */}
+        {/* Feedback Modal */}
         {showFeedback && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-96 max-w-full relative">
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"
                 onClick={() => setShowFeedback(false)}
-                aria-label="Close feedback"
               >
                 &times;
               </button>
@@ -223,13 +210,12 @@ export default function SideBar({ expanded, setExpanded }) {
           </div>
         )}
 
-        {/* Settings Modal/Panel */}
+        {/* Settings Modal */}
         {showSettings && (
           <SettingsPanel onClose={() => setShowSettings(false)} />
         )}
       </div>
 
-      {/* Custom CSS for fade animation */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateX(-10px); }
@@ -243,7 +229,6 @@ export default function SideBar({ expanded, setExpanded }) {
   );
 }
 
-// SettingsPanel component
 function SettingsPanel({ onClose }) {
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -253,7 +238,6 @@ function SettingsPanel({ onClose }) {
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white"
           onClick={onClose}
-          aria-label="Close settings"
         >
           &times;
         </button>

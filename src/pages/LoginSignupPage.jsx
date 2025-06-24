@@ -31,15 +31,22 @@ function LoginSignupPage() {
       const response = await axios.post(`${BASE_URL}${endpoint}`, payload);
 
       if (mode === 'signup') {
-        // ✅ After signup, redirect to login
+        // ✅ After signup, reset and switch to login
         setMode('login');
         setForm({ username: '', email: '', password: '' });
         setError('');
       } else {
-        // ✅ After login, redirect to home
-        navigate('/home');
+        // ✅ After login, store user in localStorage and redirect
+        const user = response.data?.user;
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          navigate('/home');
+        } else {
+          setError('Login succeeded, but no user data returned.');
+        }
       }
     } catch (err) {
+      console.error('Auth error:', err);
       setError(err.response?.data?.error || 'Something went wrong.');
     }
   };
@@ -56,6 +63,7 @@ function LoginSignupPage() {
             name="username"
             type="text"
             placeholder="Username"
+            autoComplete="username"
             value={form.username}
             onChange={handleChange}
             required
@@ -67,6 +75,7 @@ function LoginSignupPage() {
               name="email"
               type="email"
               placeholder="Email"
+              autoComplete="email"
               value={form.email}
               onChange={handleChange}
               required
@@ -78,6 +87,7 @@ function LoginSignupPage() {
             name="password"
             type="password"
             placeholder="Password"
+            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             value={form.password}
             onChange={handleChange}
             required
@@ -95,7 +105,9 @@ function LoginSignupPage() {
         </form>
 
         <p className="mt-4 text-center text-sm">
-          {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+          {mode === 'login'
+            ? "Don't have an account?"
+            : 'Already have an account?'}{' '}
           <button
             onClick={() => {
               setMode(mode === 'login' ? 'signup' : 'login');

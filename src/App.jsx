@@ -1,9 +1,8 @@
 // src/App.jsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import ToastConfig from './components/ToastConfig';
-
 
 import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
@@ -25,17 +24,20 @@ import SideBar from './components/SideBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
-function AppContent() {
+function AppContent({ currentUser, setCurrentUser }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const location = useLocation();
 
-  // Pages that don't require sidebar/navbar/footer
   const isMinimalPage = ["/auth", "/privacy", "/terms", "/cookies"].includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {!isMinimalPage && (
-        <SideBar expanded={sidebarExpanded} setExpanded={setSidebarExpanded} />
+        <SideBar
+          expanded={sidebarExpanded}
+          setExpanded={setSidebarExpanded}
+          currentUser={currentUser}
+        />
       )}
       <div className="flex-1 flex flex-col">
         {!isMinimalPage && (
@@ -43,9 +45,8 @@ function AppContent() {
         )}
         <div className={`flex-grow ${!isMinimalPage ? 'pt-16 pb-24' : ''}`}>
           <Routes>
-            {/* Redirect root to /auth */}
             <Route path="/" element={<Navigate to="/auth" />} />
-            <Route path="/auth" element={<LoginSignupPage />} />
+            <Route path="/auth" element={<LoginSignupPage setCurrentUser={setCurrentUser} />} />
             <Route path="/home" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
             <Route path="/users" element={<UsersPage />} />
             <Route path="/habits" element={<HabitsPage />} />
@@ -66,12 +67,21 @@ function AppContent() {
 }
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <Router>
         <Toaster position="top-right" />
         <ToastConfig />
-        <AppContent />
+        <AppContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
       </Router>
     </ThemeProvider>
   );
