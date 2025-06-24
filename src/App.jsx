@@ -19,6 +19,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookieSettings from './pages/CookieSettings';
 import LoginSignupPage from './pages/LoginSignupPage';
+import ChatLog from "./components/ChatLog";
 
 import SideBar from './components/SideBar';
 import Navbar from './components/Navbar';
@@ -58,6 +59,7 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookieSettings />} />
+            <Route path="/chat" element={<ChatLog currentUser={currentUser} />} />
           </Routes>
         </div>
         {!isMinimalPage && <Footer sidebarExpanded={sidebarExpanded} />}

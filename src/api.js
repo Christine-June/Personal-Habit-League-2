@@ -64,3 +64,20 @@ export const getHabitEntries = (params = {}) =>
 
 export const createHabitEntry = (entry) =>
   axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
+
+// LOGIN
+export async function login(credentials) {
+  const response = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+    credentials: 'include',
+  });
+  const data = await response.json();
+  // Check if user data is present
+  if (data.user) {
+    return data.user;
+  } else {
+    throw new Error(data.message || 'Login failed');
+  }
+}

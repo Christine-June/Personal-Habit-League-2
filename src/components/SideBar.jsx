@@ -28,7 +28,7 @@ export default function SideBar({ expanded, setExpanded }) {
   const navItems = [
     { path: '/home', name: 'Home', icon: '🏠', hoverText: 'Home' },
     { path: '/habits', name: 'Habits', icon: '📝', hoverText: 'Track habits' },
-    { path: '/habit-entries', name: 'Progress', icon: '📊', hoverText: 'Your progress' },
+    { path: '/chat', name: 'Chat Log', icon: '💬', hoverText: 'View chat log' }, // Chat Log replaces Progress
     { path: '/challenges', name: 'Challenges', icon: '🏆', hoverText: 'Join challenges' },
     { path: '/users', name: 'Community', icon: '👥', hoverText: 'Connect with others' },
     { path: '/privacy', name: 'Privacy Policy', icon: '🔒', hoverText: 'Privacy Policy' },
