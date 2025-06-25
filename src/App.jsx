@@ -81,7 +81,7 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <Toaster position="top-right" />
+       <Toaster position="top-right" reverseOrder={false} />
         <ToastConfig />
         <AppContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
       </Router>
