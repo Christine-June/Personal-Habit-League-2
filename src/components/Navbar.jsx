@@ -1,6 +1,7 @@
 // src/components/Navbar.jsx
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import DarkModeToggle from './DarkModeToggle';
 
 export default function Navbar({ sidebarExpanded }) {
   const { isDarkMode } = useTheme();
@@ -32,16 +33,19 @@ export default function Navbar({ sidebarExpanded }) {
           <span>Habit League</span>
         </Link>
 
-        <div className="hidden md:flex items-center space-x-6">
-          {isLoggedIn ? (
-            <>
-              <Link to="/habits" className="hover:text-blue-500 transition-colors">Habits</Link>
-              <Link to="/challenges" className="hover:text-blue-500 transition-colors">Challenges</Link>
-              <button onClick={logout} className="hover:text-blue-500 transition-colors">Logout</button>
-            </>
-          ) : (
-            <Link to="/login" className="hover:text-blue-500 transition-colors">Login</Link>
-          )}
+        <div className="flex items-center space-x-4">
+          <DarkModeToggle />
+          <div className="hidden md:flex items-center space-x-6">
+            {isLoggedIn ? (
+              <>
+                <Link to="/habits" className="hover:text-blue-500 transition-colors">Habits</Link>
+                <Link to="/challenges" className="hover:text-blue-500 transition-colors">Challenges</Link>
+                <button onClick={logout} className="hover:text-blue-500 transition-colors">Logout</button>
+              </>
+            ) : (
+              <Link to="/login" className="hover:text-blue-500 transition-colors">Login</Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -33,7 +33,7 @@ function AppContent({ currentUser, setCurrentUser }) {
   const isMinimalPage = ["/auth", "/privacy", "/terms", "/cookies"].includes(location.pathname);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-black transition-colors duration-300">
       {!isMinimalPage && (
         <SideBar
           expanded={sidebarExpanded}

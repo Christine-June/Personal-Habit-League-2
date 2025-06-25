@@ -1,18 +1,16 @@
 import { useTheme } from '../context/ThemeContext';
+
 export default function DarkModeToggle() {
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode, setIsDarkMode } = useTheme();
 
   return (
-    <button 
-      onClick={toggleTheme}
-      className="p-2 rounded-full focus:outline-none transition-colors duration-300"
-      aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+    <button
+      onClick={() => setIsDarkMode(!isDarkMode)}
+      className="px-3 py-1 rounded transition bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+      aria-label="Toggle dark mode"
+      type="button"
     >
-      {isDarkMode ? (
-        <span className="text-yellow-400">☀️</span>
-      ) : (
-        <span className="text-blue-400">🌙</span>
-      )}
+      {isDarkMode ? '🌙 Dark' : '☀️ Light'}
     </button>
   );
 }
