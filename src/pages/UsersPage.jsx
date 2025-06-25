@@ -58,7 +58,7 @@ export default function UsersPage() {
                 className="w-20 h-20 mx-auto rounded-full object-cover mb-2"
               />
               <p className="text-center font-medium">{u.name}</p>
-              <p className="text-center text-xs text-zinc-400 truncate">
+              <p className="text-center text-xs text-black truncate">
                 {u.email}
               </p>
             </Link>

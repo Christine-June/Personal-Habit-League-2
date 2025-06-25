@@ -49,11 +49,11 @@ export default function HabitEntriesPage() {
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {entries.map(entry => (
-            <li key={entry.id} className="p-4 rounded-2xl bg-zinc-900/60 shadow hover:shadow-lg transition">
-              <p className="text-sm text-zinc-300 mb-1">
-                Habit ID: <span className="font-medium text-white">{entry.habit_id}</span>
+            <li key={entry.id} className="p-4 rounded-2xl bg-grey-600 shadow hover:shadow-lg transition">
+              <p className="text-sm text-black-300 mb-1">
+                Habit Name: <span className="font-medium text-black">{entry.notes}</span>
               </p>
-              <p className="text-sm text-zinc-300 mb-1">
+              <p className="text-sm text-black-300 mb-1">
                 Progress: <span className="inline-block px-2 py-1 bg-blue-600 rounded text-white text-xs">{entry.progress}</span>
               </p>
               <p className="text-sm text-zinc-400 mb-1">Date: {entry.date}</p>
