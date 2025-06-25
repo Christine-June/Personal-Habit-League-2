@@ -14,7 +14,6 @@ export default function SideBar({ expanded, setExpanded }) {
   const sidebarRef = useRef(null);
   const location = useLocation();
 
-  // ✅ Safely load user from localStorage
   let user = null;
   try {
     const stored = localStorage.getItem("user");
@@ -28,7 +27,7 @@ export default function SideBar({ expanded, setExpanded }) {
   const navItems = [
     { path: '/home', name: 'Home', icon: '🏠', hoverText: 'Home' },
     { path: '/habits', name: 'Habits', icon: '📝', hoverText: 'Track habits' },
-    { path: '/chat', name: 'Chat Log', icon: '💬', hoverText: 'View chat log' }, // Chat Log replaces Progress
+    { path: '/chat', name: 'Chat Log', icon: '💬', hoverText: 'View chat log' },
     { path: '/challenges', name: 'Challenges', icon: '🏆', hoverText: 'Join challenges' },
     { path: '/users', name: 'Community', icon: '👥', hoverText: 'Connect with others' },
     { path: '/privacy', name: 'Privacy Policy', icon: '🔒', hoverText: 'Privacy Policy' },
@@ -97,11 +96,10 @@ export default function SideBar({ expanded, setExpanded }) {
         ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}
         border-r ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}
         transition-all duration-300 ease-in-out
-        shadow-lg overflow-y-auto
+        shadow-lg overflow-hidden
       `}
     >
       <div className="flex flex-col h-full p-4">
-        {/* Logo/Header */}
         <div className="flex items-center mb-8">
           <div
             className="p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 w-fit cursor-pointer"
@@ -118,7 +116,6 @@ export default function SideBar({ expanded, setExpanded }) {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1">
           <ul className="space-y-1">
             {navItems.map((item) => (
@@ -152,7 +149,6 @@ export default function SideBar({ expanded, setExpanded }) {
           </ul>
         </nav>
 
-        {/* Feedback and Settings */}
         <button
           className="flex items-center gap-2 p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 mt-2"
           onClick={() => setShowFeedback(true)}
@@ -169,7 +165,6 @@ export default function SideBar({ expanded, setExpanded }) {
           {expanded && <span>Settings</span>}
         </button>
 
-        {/* User Profile */}
         <div className="mt-auto mb-4">
           <div className={`flex items-center p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 ${expanded ? 'w-full' : 'w-fit mx-auto'} cursor-pointer group`}>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
@@ -197,7 +192,6 @@ export default function SideBar({ expanded, setExpanded }) {
           </div>
         </div>
 
-        {/* Feedback Modal */}
         {showFeedback && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg w-96 max-w-full relative">
@@ -212,7 +206,6 @@ export default function SideBar({ expanded, setExpanded }) {
           </div>
         )}
 
-        {/* Settings Modal */}
         {showSettings && (
           <SettingsPanel onClose={() => setShowSettings(false)} />
         )}
