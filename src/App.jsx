@@ -21,6 +21,7 @@ import CookieSettings from './pages/CookieSettings';
 import LoginSignupPage from './pages/LoginSignupPage';
 import ChatLog from "./components/ChatLog";
 import ProtectedRoute from './components/ProtectedRoute';
+import BlogPage from './pages/BlogPage';
 
 import SideBar from './components/SideBar';
 import Navbar from './components/Navbar';
@@ -61,6 +62,7 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookieSettings />} />
             <Route path="/chat" element={<ChatLog currentUser={currentUser} />} />
+            <Route path="/blog" element={<BlogPage />} />
           </Routes>
         </div>
         {!isMinimalPage && <Footer sidebarExpanded={sidebarExpanded} />}
