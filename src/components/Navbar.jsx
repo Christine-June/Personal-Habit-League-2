@@ -6,8 +6,13 @@ export default function Navbar({ sidebarExpanded }) {
   const { isDarkMode } = useTheme();
 
   const marginClass = sidebarExpanded ? 'md:ml-64' : 'md:ml-10';
-
   const isLoggedIn = !!localStorage.getItem('token');
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/auth';
+  }
 
   return (
     <nav
