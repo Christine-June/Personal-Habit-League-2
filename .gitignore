@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-
+.src/Personal-Habit-League-2.code-workspace
 # Environment variables
 .env
 

@@ -1,11 +1,10 @@
 {
-	"folders": [
-		{
-			"path": ".."
-		},
-		{
-			"path": "../../Personal-Habit-Challenge-League"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "../../../development/code/se-prep/phase-4/projo/Personal-Habit-Challenge-League"
+        },
+        {
+            "path": ".."
+        }
+    ]
 }
