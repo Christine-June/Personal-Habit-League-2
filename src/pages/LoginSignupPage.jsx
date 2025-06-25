@@ -4,11 +4,20 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:5000'; // Update this when deploying
 
+const AVATAR_OPTIONS = [
+  'https://randomuser.me/api/portraits/men/1.jpg',
+  'https://randomuser.me/api/portraits/women/2.jpg',
+  'https://randomuser.me/api/portraits/men/3.jpg',
+  'https://randomuser.me/api/portraits/women/4.jpg',
+  // Add more as you like
+];
+
 function LoginSignupPage() {
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
+    avatar_url: '', // <-- add this
   });
   const [mode, setMode] = useState('login'); // 'login' or 'signup'
   const [error, setError] = useState('');
@@ -31,20 +40,26 @@ function LoginSignupPage() {
       const response = await axios.post(`${BASE_URL}${endpoint}`, payload);
 
       if (mode === 'signup') {
-        // ✅ After signup, reset and switch to login
+        // Store user and token if present
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+        if (response.data.access_token) {
+          localStorage.setItem('token', response.data.access_token);
+        }
+        // Optionally, navigate to home or switch to login
+        navigate('/home');
         setMode('login');
-        setForm({ username: '', email: '', password: '' });
+        setForm({ username: '', email: '', password: '', avatar_url: '' });
         setError('');
       } else {
-        // ✅ After login, store user in localStorage and redirect
-        const user = response.data?.user;
-        if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          localStorage.setItem('token', response.data.access_token);
-          navigate('/home');
-        } else {
-          setError('Login succeeded, but no user data returned.');
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
         }
+        if (response.data.access_token) {
+          localStorage.setItem('token', response.data.access_token);
+        }
+        navigate('/home');
       }
     } catch (err) {
       console.error('Auth error:', err);
@@ -70,6 +85,40 @@ function LoginSignupPage() {
             required
             className="w-full px-4 py-2 border rounded"
           />
+
+          {mode === 'signup' && (
+            <>
+              <label className="block font-medium mt-2 mb-1">Choose an Avatar</label>
+              <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
+                {AVATAR_OPTIONS.map((url) => (
+                  <button
+                    type="button"
+                    key={url}
+                    onClick={() => setForm({ ...form, avatar_url: url })}
+                    className={`border-2 rounded-full p-1 ${form.avatar_url === url ? "border-blue-500" : "border-transparent"}`}
+                  >
+                    <img src={url} alt="avatar" className="w-12 h-12 rounded-full object-cover" />
+                  </button>
+                ))}
+              </div>
+              <label className="block mb-1 font-medium">Or paste your own image URL</label>
+              <input
+                type="url"
+                name="avatar_url"
+                value={form.avatar_url}
+                onChange={handleChange}
+                className="w-full p-2 border rounded mb-2"
+                placeholder="Paste image URL here"
+              />
+              {form.avatar_url && (
+                <img
+                  src={form.avatar_url}
+                  alt="Avatar Preview"
+                  className="w-16 h-16 rounded-full mb-2 object-cover"
+                />
+              )}
+            </>
+          )}
 
           {mode === 'signup' && (
             <input

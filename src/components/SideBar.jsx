@@ -172,8 +172,16 @@ export default function SideBar({ expanded, setExpanded }) {
         {/* User Profile */}
         <div className="mt-auto mb-4">
           <div className={`flex items-center p-3 rounded-full hover:bg-gray-200 hover:dark:bg-gray-800 ${expanded ? 'w-full' : 'w-fit mx-auto'} cursor-pointer group`}>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xl">👤</span>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              {user?.avatar_url ? (
+                <img
+                  src={user.avatar_url}
+                  alt={user.username}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-white text-xl">👤</span>
+              )}
             </div>
             <div className={`ml-3 transition-all duration-300 ${expanded ? 'opacity-100' : 'opacity-0 max-w-0 ml-0'} overflow-hidden`}>
               <div className="font-semibold text-gray-800 dark:text-gray-100">

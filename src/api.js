@@ -92,3 +92,11 @@ export function getProtectedUser() {
     headers: { Authorization: `Bearer ${token}` }
   }).then(res => res.data);
 }
+
+export async function updateUser(userId, data) {
+  const token = localStorage.getItem('token');
+  const res = await axios.patch(`${BASE_URL}/users/${userId}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}
