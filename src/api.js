@@ -1,16 +1,20 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // HABITS
-export async function getHabits() {
-  const res = await axios.get(`${BASE_URL}/habits/`);
-  return res.data;
+export function getHabits() {
+  const token = localStorage.getItem('token');
+  return axios.get(`${BASE_URL}/habits/`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }).then(res => res.data);
 }
 
 export async function addHabit(habitData) {
-  const res = await axios.post(`${BASE_URL}/habits/`, habitData);
-  return res.data;
+  const token = localStorage.getItem('token');
+  axios.post(`${BASE_URL}/habits/`, habitData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
 }
 
 export async function updateHabit(habitId, updatedData) {
@@ -67,17 +71,24 @@ export const createHabitEntry = (entry) =>
 
 // LOGIN
 export async function login(credentials) {
-  const response = await fetch('/login', {
+  const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
-    credentials: 'include',
   });
   const data = await response.json();
-  // Check if user data is present
-  if (data.user) {
+  if (data.access_token) {
+    localStorage.setItem('token', data.access_token);
     return data.user;
   } else {
-    throw new Error(data.message || 'Login failed');
+    throw new Error(data.error || 'Login failed');
   }
+}
+
+// PROTECTED ROUTE EXAMPLE
+export function getProtectedUser() {
+  const token = localStorage.getItem('token');
+  return axios.get(`${BASE_URL}/protected`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }).then(res => res.data);
 }

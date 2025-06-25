@@ -40,6 +40,7 @@ function LoginSignupPage() {
         const user = response.data?.user;
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', response.data.access_token);
           navigate('/home');
         } else {
           setError('Login succeeded, but no user data returned.');

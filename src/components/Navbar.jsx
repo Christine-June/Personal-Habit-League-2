@@ -7,6 +7,8 @@ export default function Navbar({ sidebarExpanded }) {
 
   const marginClass = sidebarExpanded ? 'md:ml-64' : 'md:ml-10';
 
+  const isLoggedIn = !!localStorage.getItem('token');
+
   return (
     <nav
       className={`
@@ -26,10 +28,15 @@ export default function Navbar({ sidebarExpanded }) {
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/habits" className="hover:text-blue-500 transition-colors">Habits</Link>
-          <Link to="/habit-entries" className="hover:text-blue-500 transition-colors">Progress</Link>
-          <Link to="/challenges" className="hover:text-blue-500 transition-colors">Challenges</Link>
-          <Link to="/users" className="hover:text-blue-500 transition-colors">Community</Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/habits" className="hover:text-blue-500 transition-colors">Habits</Link>
+              <Link to="/challenges" className="hover:text-blue-500 transition-colors">Challenges</Link>
+              <button onClick={logout} className="hover:text-blue-500 transition-colors">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="hover:text-blue-500 transition-colors">Login</Link>
+          )}
         </div>
       </div>
     </nav>

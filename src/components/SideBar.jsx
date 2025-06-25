@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useEffect, useRef, useState } from 'react';
 import { FiSettings, FiMessageCircle } from 'react-icons/fi';
@@ -83,6 +83,8 @@ export default function SideBar({ expanded, setExpanded }) {
       clearTimeout(expandTimeout);
     };
   }, [hoverTimeout, expandTimeout]);
+
+  const isLoggedIn = !!localStorage.getItem('token');
 
   return (
     <div

@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import ToastConfig from './components/ToastConfig';
 
@@ -20,6 +20,7 @@ import TermsOfService from './pages/TermsOfService';
 import CookieSettings from './pages/CookieSettings';
 import LoginSignupPage from './pages/LoginSignupPage';
 import ChatLog from "./components/ChatLog";
+import ProtectedRoute from './components/ProtectedRoute';
 
 import SideBar from './components/SideBar';
 import Navbar from './components/Navbar';
@@ -50,12 +51,12 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/auth" element={<LoginSignupPage setCurrentUser={setCurrentUser} />} />
             <Route path="/home" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
             <Route path="/users" element={<UsersPage />} />
-            <Route path="/habits" element={<HabitsPage />} />
-            <Route path="/challenges" element={<ChallengesPage />} />
+            <Route path="/habits" element={<ProtectedRoute><HabitsPage /></ProtectedRoute>} />
+            <Route path="/challenges" element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
             <Route path="/user-habits" element={<UserHabitsPage />} />
             <Route path="/challenge-participants" element={<ChallengeParticipantsPage />} />
             <Route path="/challenge-entries" element={<ChallengeEntriesPage />} />
-            <Route path="/habit-entries" element={<HabitEntriesPage />} />
+            <Route path="/habit-entries" element={<ProtectedRoute><HabitEntriesPage /></ProtectedRoute>} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookieSettings />} />
@@ -66,6 +67,11 @@ function AppContent({ currentUser, setCurrentUser }) {
       </div>
     </div>
   );
+}
+
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/auth" />;
 }
 
 function App() {
@@ -90,3 +96,10 @@ function App() {
 }
 
 export default App;
+
+const isLoggedIn = !!localStorage.getItem('token');
+return (
+  <nav>
+    {isLoggedIn ? <Link to="/profile">Profile</Link> : <Link to="/login">Login</Link>}
+  </nav>
+);
