@@ -1,5 +1,6 @@
 // src/pages/HabitsPage.jsx
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast"; // ✅ Toast import
 import {
   getHabits,
@@ -8,18 +9,28 @@ import {
   getUsers,
   addHabit,
 } from "../api";
+import HabitForm from "../components/HabitForm";
 import HabitModal from "../components/HabitModal";
 import { MoreVertical } from "lucide-react";
 
-const HabitsPage = () => {
+const HabitsPage = ({ currentUser }) => {
   const [habits, setHabits] = useState([]);
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingHabit, setEditingHabit] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("add") === "1") {
+      setShowModal(true);
+    }
+  }, [location.search]);
 
   const fetchData = async () => {
     toast.loading("Loading habits...");
@@ -39,11 +50,12 @@ const HabitsPage = () => {
   const handleAddHabit = async (newHabit) => {
     try {
       toast.loading("Adding habit...");
-      await addHabit(newHabit);
+      const habitWithUser = { ...newHabit, user_id: currentUser.id };
+      await addHabit(habitWithUser);
       setShowModal(false);
-      await fetchData();
       toast.dismiss();
       toast.success("Habit added successfully!");
+      navigate("/home");
     } catch (err) {
       toast.dismiss();
       toast.error("Failed to add habit.");
@@ -75,6 +87,13 @@ const HabitsPage = () => {
       toast.dismiss();
       toast.error("Failed to delete habit.");
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    const params = new URLSearchParams(location.search);
+    params.delete("add");
+    navigate({ search: params.toString() }, { replace: true });
   };
 
   return (
@@ -135,14 +154,13 @@ const HabitsPage = () => {
 
       {showModal && (
         <HabitModal
-          users={users}
           onClose={() => setShowModal(false)}
           onSubmit={handleAddHabit}
         />
       )}
 
       {editingHabit && (
-        <HabitModal
+        <HabitForm
           users={users}
           habit={editingHabit}
           onClose={() => setEditingHabit(null)}

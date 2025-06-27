@@ -9,10 +9,9 @@ const ChallengeSchema = Yup.object().shape({
   end_date: Yup.date()
     .required('End date is required')
     .min(Yup.ref('start_date'), 'End date must be after start date'),
-  created_by: Yup.number().required('Creator is required'),
 });
 
-export default function ChallengeForm({ onClose, onSave, initialData }) {
+export default function ChallengeForm({ onClose, onSave, initialData, currentUser }) {
   useEffect(() => {
     if (initialData) {
       setForm(initialData);
@@ -26,15 +25,14 @@ export default function ChallengeForm({ onClose, onSave, initialData }) {
         description: initialData?.description || '',
         start_date: initialData?.start_date || '',
         end_date: initialData?.end_date || '',
-        created_by: initialData?.created_by || '',
       }}
       validationSchema={ChallengeSchema}
       onSubmit={async (values, { setSubmitting }) => {
-        await onSave(values);
+        await onSave({ ...values, created_by: currentUser.id });
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting, setFieldValue }) => (
+      {({ isSubmitting }) => (
         <Form className="bg-white p-6 rounded shadow-lg w-full max-w-md">
           <h2 className="text-xl font-bold mb-4">
             {initialData ? 'Edit Challenge' : 'New Challenge'}
@@ -79,26 +77,6 @@ export default function ChallengeForm({ onClose, onSave, initialData }) {
             />
             <ErrorMessage
               name="end_date"
-              component="div"
-              className="text-red-500"
-            />
-          </label>
-          <label>
-            Created By
-            <Field
-              as="select"
-              name="created_by"
-              className="w-full border rounded p-2 mt-1"
-            >
-              <option value="">Select user</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.username}
-                </option>
-              ))}
-            </Field>
-            <ErrorMessage
-              name="created_by"
               component="div"
               className="text-red-500"
             />

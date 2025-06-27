@@ -8,11 +8,10 @@ const HabitSchema = Yup.object().shape({
   frequency: Yup.string()
     .oneOf(["daily", "weekly", "monthly"], "Invalid frequency")
     .required("Frequency is required"),
-  user_id: Yup.number().required("User is required"),
   description: Yup.string(),
 });
 
-const HabitModal = ({ users, habit = null, onClose, onSubmit }) => {
+const HabitModal = ({ habit = null, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
@@ -30,7 +29,6 @@ const HabitModal = ({ users, habit = null, onClose, onSubmit }) => {
             name: habit?.name || "",
             description: habit?.description || "",
             frequency: habit?.frequency || "daily",
-            user_id: habit?.user_id || (users.length ? users[0].id : ""),
           }}
           validationSchema={HabitSchema}
           onSubmit={async (values, { setSubmitting }) => {
@@ -69,22 +67,6 @@ const HabitModal = ({ users, habit = null, onClose, onSubmit }) => {
                   <option value="monthly">Monthly</option>
                 </Field>
                 <ErrorMessage name="frequency" component="div" className="text-red-500" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">User</label>
-                <Field
-                  as="select"
-                  name="user_id"
-                  className="w-full border border-gray-300 rounded px-3 py-2"
-                >
-                  <option value="">Select user</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.username || `User ${user.id}`}
-                    </option>
-                  ))}
-                </Field>
-                <ErrorMessage name="user_id" component="div" className="text-red-500" />
               </div>
               <div className="flex justify-end">
                 <button

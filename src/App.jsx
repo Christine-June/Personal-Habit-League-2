@@ -14,6 +14,7 @@ import ChallengesPage from "./pages/ChallengesPage";
 import LeaderboardPage from "./pages/LeaderboardPage"; // You may need to create this if not present
 import ProfilePage from "./pages/ProfilePage"; // You may need to create this if not present
 import AuthPage from "./pages/AuthPage"; // Import the AuthPage component
+import HabitsPage from "./pages/HabitsPage"; // <-- import this
 
 import SideBar from "./components/Sidebar";
 import TopNavBar from "./components/TopNavBar";
@@ -57,6 +58,7 @@ function AppContent({ currentUser, setCurrentUser }) {
               element={<ProfilePage currentUser={currentUser} />}
             />
             <Route path="/auth" element={<AuthPage setCurrentUser={setCurrentUser} />} /> {/* Add the Auth route */}
+            <Route path="/habits" element={<HabitsPage currentUser={currentUser} />} /> {/* <-- add this */}
           </Routes>
         </main>
       </div>

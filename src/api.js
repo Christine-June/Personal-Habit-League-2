@@ -11,10 +11,7 @@ export function getHabits() {
 }
 
 export async function addHabit(habitData) {
-  const token = localStorage.getItem('token');
-  axios.post(`${BASE_URL}/habits/`, habitData, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  return axios.post(`${BASE_URL}/habits/`, habitData).then(res => res.data);
 }
 
 export async function updateHabit(habitId, updatedData) {

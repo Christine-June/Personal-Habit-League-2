@@ -1,6 +1,8 @@
 // src/pages/ChallengesPage.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ChallengeForm from '../components/ChallengeForm';
 
 const BASE_URL = 'http://localhost:5000';
 
@@ -8,13 +10,13 @@ export default function ChallengesPage() {
   const [challenges, setChallenges] = useState([]);
   const [joinedIds, setJoinedIds] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch challenges
-    fetchChallenges();
-    // Fetch current user and their joined challenges
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('currentUser'));
     setCurrentUser(user);
+    fetchChallenges();
     if (user) {
       axios.get(`${BASE_URL}/users/${user.id}/profile`)
         .then(res => setJoinedIds(res.data.challenges.map(c => c.id)));
@@ -26,18 +28,34 @@ export default function ChallengesPage() {
       .then(res => setChallenges(res.data));
   };
 
-  const handleJoin = async (challengeId) => {
-    try {
-      await axios.post(`${BASE_URL}/challenge-participants`, { challenge_id: challengeId }, {
-        withCredentials: true,
-      });
-      setJoinedIds([...joinedIds, challengeId]);
-      alert('Joined challenge!');
-    } catch (err) {
-      alert('Could not join challenge.');
-    }
+  const handleSaveChallenge = async (challengeData) => {
+    await axios.post(`${BASE_URL}/challenges`, challengeData);
+    handleCloseModal();
+    navigate("/home"); // Redirect to feed after creation
   };
 
+  const handleCloseModal = () => {
+    const params = new URLSearchParams(location.search);
+    params.delete('add');
+    navigate({ search: params.toString() }, { replace: true });
+  };
+
+  // Check if we're in "add" mode
+  const params = new URLSearchParams(location.search);
+  const isAddMode = params.get('add') === '1';
+
+  if (isAddMode && currentUser) {
+    // Only show the creation form
+    return (
+      <ChallengeForm
+        onClose={handleCloseModal}
+        onSave={handleSaveChallenge}
+        currentUser={currentUser}
+      />
+    );
+  }
+
+  // Otherwise, show the challenge list
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Challenges</h2>

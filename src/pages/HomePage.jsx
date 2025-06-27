@@ -105,7 +105,6 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
         <div className="w-full max-w-xl flex flex-col gap-6">
           <h1 className="text-2xl font-bold mb-2">Feed</h1>
           {(feed || []).filter(item => item && typeof item.id !== "undefined").map((item, idx) => {
-            console.log("Rendering feed item", idx, item);
             const likeKey = `${item.type}-${item.id}`;
             return (
               <div
@@ -113,12 +112,15 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                 tabIndex={0}
                 role="button"
                 onClick={e => {
-                  // Only navigate if the click is directly on the card, not a child (like button)
                   if (e.target === e.currentTarget) {
                     navigate(item.type === "habit" ? `/habits/${item.id}` : `/challenges/${item.id}`);
                   }
                 }}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow p-6 flex flex-col gap-2 cursor-pointer transition-transform hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+                className={`
+                  rounded-xl shadow p-6 flex flex-col gap-2 cursor-pointer transition-transform hover:scale-[1.02] hover:shadow-lg focus:ring-2 focus:ring-indigo-400 outline-none
+                  ${item.type === "challenge" ? "bg-blue-100" : ""}
+                  ${item.type === "habit" ? "bg-orange-100" : ""}
+                `}
               >
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-pink-400 flex items-center justify-center text-lg font-bold text-white overflow-hidden border border-gray-300">
@@ -146,8 +148,8 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                   </div>
                   <span className={`ml-auto px-2 py-0.5 rounded-full text-xs font-semibold
                     ${item.type === "habit"
-                      ? "bg-blue-100 text-blue-600"
-                      : "bg-pink-100 text-pink-600"}
+                      ? "bg-orange-400 text-white"
+                      : "bg-blue-500 text-white"}
                   `}>
                     {item.type === "habit" ? "Habit" : "Challenge"}
                   </span>
