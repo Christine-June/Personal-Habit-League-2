@@ -77,8 +77,9 @@ export async function login(credentials) {
     body: JSON.stringify(credentials),
   });
   const data = await response.json();
-  if (data.access_token) {
+  if (data.access_token && data.user) {
     localStorage.setItem('token', data.access_token);
+    localStorage.setItem('currentUser', JSON.stringify(data.user)); // Always use "currentUser"
     return data.user;
   } else {
     throw new Error(data.error || 'Login failed');

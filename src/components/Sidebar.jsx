@@ -9,7 +9,7 @@ const navItems = [
   { to: "/profile", icon: "👤", label: "Profile" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ expanded, setExpanded }) {
   return (
     <aside
       className="hidden sm:flex fixed top-0 left-0 h-screen w-20 bg-white border-r border-gray-200 flex-col items-center py-6 z-50"
@@ -40,6 +40,7 @@ export default function Sidebar() {
           </NavLink>
         ))}
       </nav>
+      {/* Removed the custom profile button here */}
     </aside>
   );
 }

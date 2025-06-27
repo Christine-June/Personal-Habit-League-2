@@ -10,8 +10,8 @@ function CommentModal({ open, onClose, comments, onAddComment }) {
         <button className="absolute top-2 right-2 text-gray-500 text-2xl" onClick={onClose}>&times;</button>
         <h2 className="text-lg font-bold mb-2">Comments</h2>
         <ul className="mb-4 max-h-40 overflow-y-auto">
-          {comments.map((c) => (
-            <li key={c.id} className="mb-2">
+          {(comments || []).map((c) => (
+            <li key={c.id || Math.random()} className="mb-2">
               <span className="font-bold">{c.user}:</span> {c.content}
             </li>
           ))}
@@ -46,7 +46,7 @@ function CommentModal({ open, onClose, comments, onAddComment }) {
   );
 }
 
-export default function HomePage({ sidebarExpanded }) {
+export default function HomePage({ sidebarExpanded, currentUser }) {
   const marginClass = sidebarExpanded ? 'md:ml-64' : 'md:ml-20';
   const navigate = useNavigate();
 
@@ -69,6 +69,7 @@ export default function HomePage({ sidebarExpanded }) {
           initialCounts[likeKey] = 0;
         });
         setLikeCounts(initialCounts);
+        console.log("Feed data:", data);
       })
       .catch(() => setLoading(false));
   }, []);
@@ -76,20 +77,35 @@ export default function HomePage({ sidebarExpanded }) {
   const handleAddComment = (content) => {
     setCommentModal((modal) => ({
       ...modal,
-      comments: [...modal.comments, { id: Date.now(), user: "You", content }]
+      comments: [
+        ...modal.comments,
+        { id: Date.now(), user: currentUser.username || currentUser.name || "Anonymous", content }
+      ]
     }));
+  };
+
+  const handleJoinChallenge = (challengeId) => {
+    // Implement the join challenge logic here
+    console.log("Joining challenge:", challengeId);
   };
 
   if (loading) {
     return <div className="p-8 text-center text-gray-500">Loading feed...</div>;
   }
 
+  if (!currentUser) {
+    return <div className="p-8 text-center text-gray-500">Loading user...</div>;
+  }
+
+  console.log("currentUser:", currentUser);
+
   return (
     <div className={`min-h-screen flex flex-col bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-colors duration-300 pt-16 ${marginClass}`}>
       <div className="flex justify-center py-8">
         <div className="w-full max-w-xl flex flex-col gap-6">
           <h1 className="text-2xl font-bold mb-2">Feed</h1>
-          {feed.map((item) => {
+          {(feed || []).filter(item => item && typeof item.id !== "undefined").map((item, idx) => {
+            console.log("Rendering feed item", idx, item);
             const likeKey = `${item.type}-${item.id}`;
             return (
               <div
@@ -172,6 +188,31 @@ export default function HomePage({ sidebarExpanded }) {
                     💬
                   </button>
                 </div>
+                {item.type === "challenge" && (
+                  item.created_by === currentUser.id ? (
+                    <button
+                      className="mt-2 px-3 py-1 bg-green-500 text-white rounded"
+                      onClick={e => {
+                        e.stopPropagation();
+                        navigate(`/challenges/${item.id}/entries`);
+                      }}
+                    >
+                      View Entries
+                    </button>
+                  ) : (
+                    !item.joined && (
+                      <button
+                        className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+                        onClick={e => {
+                          e.stopPropagation();
+                          handleJoinChallenge(item.id);
+                        }}
+                      >
+                        Join Challenge
+                      </button>
+                    )
+                  )
+                )}
               </div>
             );
           })}
