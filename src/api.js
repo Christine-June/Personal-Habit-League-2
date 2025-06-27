@@ -52,8 +52,10 @@ export async function deleteChallenge(id) {
 export const getChallengeParticipants = (challengeId) =>
   axios.get(`${BASE_URL}/challenges/${challengeId}/participants`);
 
-export const addParticipantToChallenge = (challengeId, data) =>
-  axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data);
+export const addParticipantToChallenge = (challengeId, data = {}) =>
+  axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data, {
+    withCredentials: true, // Important for session-based auth!
+  });
 
 // USER HABITS
 export const getUserHabits = (userId) =>

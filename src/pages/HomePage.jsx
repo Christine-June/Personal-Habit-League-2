@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addParticipantToChallenge } from "../api";
 
 function CommentModal({ open, onClose, comments, onAddComment }) {
   const [newComment, setNewComment] = useState("");
@@ -57,7 +58,7 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
   const [commentModal, setCommentModal] = useState({ open: false, comments: [], itemId: null, itemType: null });
 
   useEffect(() => {
-    fetch('http://localhost:5000/feed')
+    fetch('http://localhost:5000/feed', { credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         setFeed(data);
@@ -69,7 +70,6 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
           initialCounts[likeKey] = 0;
         });
         setLikeCounts(initialCounts);
-        console.log("Feed data:", data);
       })
       .catch(() => setLoading(false));
   }, []);
@@ -84,9 +84,19 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
     }));
   };
 
-  const handleJoinChallenge = (challengeId) => {
-    // Implement the join challenge logic here
-    console.log("Joining challenge:", challengeId);
+  const handleJoinChallenge = async (challengeId) => {
+    try {
+      await addParticipantToChallenge(challengeId, {}); // session-based, no user_id needed
+      setFeed(feed =>
+        feed.map(item =>
+          item.type === "challenge" && item.id === challengeId
+            ? { ...item, joined: true }
+            : item
+        )
+      );
+    } catch (err) {
+      alert("Failed to join challenge.");
+    }
   };
 
   if (loading) {
@@ -96,8 +106,6 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
   if (!currentUser) {
     return <div className="p-8 text-center text-gray-500">Loading user...</div>;
   }
-
-  console.log("currentUser:", currentUser);
 
   return (
     <div className={`min-h-screen flex flex-col bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-colors duration-300 pt-16 ${marginClass}`}>
@@ -137,13 +145,15 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                   <div>
                     <div className="font-semibold">{item.user}</div>
                     <div className="text-xs text-gray-400">
-                      {new Date(item.created_at).toLocaleString(undefined, {
-                        weekday: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        month: 'short',
-                        day: 'numeric'
-                      })}
+                      {item.created_at
+                        ? new Date(item.created_at).toLocaleString(undefined, {
+                            weekday: 'short',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            month: 'short',
+                            day: 'numeric'
+                          })
+                        : ""}
                     </div>
                   </div>
                   <span className={`ml-auto px-2 py-0.5 rounded-full text-xs font-semibold
@@ -161,7 +171,7 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                   <div className="flex flex-col items-center">
                     <button
                       onClick={e => {
-                        e.stopPropagation(); // This prevents the card's onClick from firing!
+                        e.stopPropagation();
                         setLiked(l => ({ ...l, [likeKey]: !l[likeKey] }));
                         setLikeCounts(counts => ({
                           ...counts,
@@ -176,7 +186,7 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                     >
                       👍
                     </button>
-                    <span className="text-xs text-gray-500 mt-1">{liked[likeKey] ? 1 : 0}</span>
+                    <span className="text-xs text-gray-500 mt-1">{likeCounts[likeKey] || 0}</span>
                   </div>
                   {/* Comment Button */}
                   <button
@@ -190,6 +200,7 @@ export default function HomePage({ sidebarExpanded, currentUser }) {
                     💬
                   </button>
                 </div>
+                {/* Challenge-specific actions */}
                 {item.type === "challenge" && (
                   item.created_by === currentUser.id ? (
                     <button
