@@ -103,7 +103,7 @@ const PrivacyPolicy = () => {
             </p>
             <p className="text-gray-700 dark:text-gray-300 flex items-start">
               <span className="font-medium min-w-[80px]">Address:</span>
-              <span className="text-gray-700 dark:text-gray-400">123 Habit Street, Suite 100, San Francisco, CA 94107, USA</span>
+              <span className="text-gray-700 dark:text-gray-400">123 Habit Street, Nairobi</span>
             </p>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm italic">
