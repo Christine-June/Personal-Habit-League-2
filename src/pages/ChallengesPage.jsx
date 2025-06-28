@@ -6,7 +6,7 @@ import ChallengeForm from '../components/ChallengeForm';
 
 const BASE_URL = 'http://localhost:5000';
 
-export default function ChallengesPage() {
+export default function ChallengesPage({ searchQuery }) {
   const [challenges, setChallenges] = useState([]);
   const [joinedIds, setJoinedIds] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
@@ -28,6 +28,19 @@ export default function ChallengesPage() {
       .then(res => setChallenges(res.data));
   };
 
+  const handleJoin = async (challengeId) => {
+    try {
+      await axios.post(`${BASE_URL}/challenges/${challengeId}/join`);
+      // Refresh joined challenges list
+      if (currentUser) {
+        const res = await axios.get(`${BASE_URL}/users/${currentUser.id}/profile`);
+        setJoinedIds(res.data.challenges.map(c => c.id));
+      }
+    } catch (error) {
+      console.error("Failed to join challenge", error);
+    }
+  };
+
   const handleSaveChallenge = async (challengeData) => {
     await axios.post(`${BASE_URL}/challenges`, challengeData);
     handleCloseModal();
@@ -44,6 +57,12 @@ export default function ChallengesPage() {
   const params = new URLSearchParams(location.search);
   const isAddMode = params.get('add') === '1';
 
+  // Filter challenges based on search query
+  const filteredChallenges = challenges.filter(challenge =>
+    challenge.name.toLowerCase().includes(searchQuery?.toLowerCase() || '') ||
+    challenge.description.toLowerCase().includes(searchQuery?.toLowerCase() || '')
+  );
+
   if (isAddMode && currentUser) {
     // Only show the creation form
     return (
@@ -55,12 +74,12 @@ export default function ChallengesPage() {
     );
   }
 
-  // Otherwise, show the challenge list
+  // Otherwise, show the filtered challenge list
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Challenges</h2>
       <ul>
-        {challenges.map(challenge => (
+        {filteredChallenges.map(challenge => (
           <li key={challenge.id} className="mb-4 p-4 border rounded">
             <div className="font-bold">{challenge.name}</div>
             <div>{challenge.description}</div>

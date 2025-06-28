@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-const COLORS = [
-  "bg-blue-500", "bg-green-500", "bg-pink-500", "bg-yellow-500", "bg-purple-500", "bg-red-500"
-];
+const COLORS = {
+  habit: [
+    "bg-blue-500", "bg-green-500", "bg-pink-500", "bg-yellow-500", "bg-purple-500", "bg-red-500"
+  ],
+  challenge: [
+    "bg-indigo-600", "bg-teal-600", "bg-emerald-600", "bg-cyan-600", "bg-violet-600", "bg-fuchsia-600"
+  ]
+};
 
-function getColorClass(name) {
+function getColorClass(name, type = "habit") {
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return COLORS[Math.abs(hash) % COLORS.length];
+  const colors = COLORS[type] || COLORS.habit;
+  return colors[Math.abs(hash) % colors.length];
 }
 
 export default function HabitCalendar({ entries = [], onDayClick }) {
@@ -33,10 +39,10 @@ export default function HabitCalendar({ entries = [], onDayClick }) {
         {dayEntries.slice(0, 3).map((entry, i) => (
           <div key={i} className="flex items-center w-full">
             <span
-              className={`inline-block w-2 h-2 rounded-full mr-1 ${getColorClass(entry.name || "")}`}
+              className={`inline-block w-2 h-2 rounded-full mr-1 ${getColorClass(entry.name || "", entry.type)}`}
               title={entry.name}
             />
-            <span className="text-[10px] font-semibold text-gray-700 truncate max-w-[60px]" title={entry.name}>
+            <span className={`text-[10px] font-semibold truncate max-w-[60px] ${entry.type === "challenge" ? "text-indigo-700" : "text-gray-700"}`} title={entry.name}>
               {entry.name}
             </span>
             {entry.time && (

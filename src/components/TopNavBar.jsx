@@ -1,4 +1,22 @@
-export default function TopNavBar() {
+import React, { useState } from "react";
+
+export default function TopNavBar({ onSearch }) {
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleToggleSearch = () => {
+    setShowSearch(!showSearch);
+    if (showSearch) {
+      setSearchQuery("");
+      onSearch && onSearch("");
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    onSearch && onSearch(e.target.value);
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full h-16 bg-white border-b border-gray-200 flex items-center px-6 shadow-sm">
       {/* Logo/Brand */}
@@ -10,7 +28,21 @@ export default function TopNavBar() {
       <div className="flex-1" />
       {/* Quick Actions */}
       <div className="flex items-center gap-4">
-        <button className="relative p-2 rounded-full hover:bg-gray-100 transition" aria-label="Search">
+        {showSearch && (
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search..."
+            className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoFocus
+          />
+        )}
+        <button
+          className="relative p-2 rounded-full hover:bg-gray-100 transition"
+          aria-label="Search"
+          onClick={handleToggleSearch}
+        >
           <span className="text-xl">🔍</span>
         </button>
         <button className="relative p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">

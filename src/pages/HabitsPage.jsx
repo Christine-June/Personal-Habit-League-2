@@ -13,7 +13,21 @@ import HabitForm from "../components/HabitForm";
 import HabitModal from "../components/HabitModal";
 import { MoreVertical } from "lucide-react";
 
-const HabitsPage = ({ currentUser }) => {
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // ✅ Toast import
+import {
+  getHabits,
+  deleteHabit,
+  updateHabit,
+  getUsers,
+  addHabit,
+} from "../api";
+import HabitForm from "../components/HabitForm";
+import HabitModal from "../components/HabitModal";
+import { MoreVertical } from "lucide-react";
+
+const HabitsPage = ({ currentUser, searchQuery }) => {
   const [habits, setHabits] = useState([]);
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -96,6 +110,12 @@ const HabitsPage = ({ currentUser }) => {
     navigate({ search: params.toString() }, { replace: true });
   };
 
+  // Filter habits based on search query
+  const filteredHabits = habits.filter(habit =>
+    habit.name.toLowerCase().includes(searchQuery?.toLowerCase() || '') ||
+    habit.description.toLowerCase().includes(searchQuery?.toLowerCase() || '')
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black p-6 transition-colors duration-300">
       <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">
@@ -114,7 +134,7 @@ const HabitsPage = ({ currentUser }) => {
 
       {/* Habit Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {habits.map((habit) => (
+        {filteredHabits.map((habit) => (
           <div
             key={habit.id}
             className="relative bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 transition-colors"

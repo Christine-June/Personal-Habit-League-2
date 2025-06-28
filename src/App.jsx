@@ -19,11 +19,15 @@ import HabitsPage from "./pages/HabitsPage"; // <-- import this
 import SideBar from "./components/Sidebar";
 import TopNavBar from "./components/TopNavBar";
 
+import React, { useState } from "react";
+
 function AppContent({ currentUser, setCurrentUser }) {
   const location = useLocation();
   const isMinimalPage = ["/auth", "/privacy", "/terms", "/cookies"].includes(
     location.pathname
   );
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Redirect to /auth if not logged in and not on a minimal page
   if (!currentUser && !isMinimalPage) {
@@ -32,7 +36,7 @@ function AppContent({ currentUser, setCurrentUser }) {
 
   return (
     <>
-      {!isMinimalPage && <TopNavBar />}
+      {!isMinimalPage && <TopNavBar onSearch={setSearchQuery} />}
       <div className="min-h-screen flex bg-white dark:bg-black transition-colors duration-300">
         {!isMinimalPage && <SideBar />}
         <main className="flex-1 ml-20">
@@ -41,7 +45,7 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/home" element={<HomePage currentUser={currentUser} />} />
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/chat" element={<ChatLog currentUser={currentUser} />} />
-            <Route path="/challenges" element={<ChallengesPage />} />
+            <Route path="/challenges" element={<ChallengesPage searchQuery={searchQuery} />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route
               path="/profile"
@@ -58,7 +62,7 @@ function AppContent({ currentUser, setCurrentUser }) {
               element={<ProfilePage currentUser={currentUser} />}
             />
             <Route path="/auth" element={<AuthPage setCurrentUser={setCurrentUser} />} /> {/* Add the Auth route */}
-            <Route path="/habits" element={<HabitsPage currentUser={currentUser} />} /> {/* <-- add this */}
+            <Route path="/habits" element={<HabitsPage currentUser={currentUser} searchQuery={searchQuery} />} /> {/* <-- add this */}
           </Routes>
         </main>
       </div>
