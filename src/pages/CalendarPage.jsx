@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import HabitCalendar from "../components/HabitCalendar";
 import { getUserHabits } from "../api";
+import HabitModal from "../components/HabitModal";
+import ChallengeModal from "../components/ChallengeModal";
 
 export default function CalendarPage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [habitEntries, setHabitEntries] = useState([]);
   const [challengeEntries, setChallengeEntries] = useState([]);
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
@@ -26,6 +29,7 @@ export default function CalendarPage() {
     // Fetch user habits
     getUserHabits(userId)
       .then((data) => {
+        console.log("Fetched habit entries:", data);
         setHabitEntries(data);
       })
       .catch(() => {
@@ -36,6 +40,7 @@ export default function CalendarPage() {
     fetch(`http://localhost:5000/users/${userId}/profile`, { credentials: "include" })
       .then(res => res.json())
       .then(data => {
+        console.log("Fetched challenge entries:", data.challenges);
         const joinedChallenges = data.challenges || [];
         const challengeEntries = joinedChallenges.map(challenge => ({
           id: challenge.id,
@@ -74,10 +79,44 @@ export default function CalendarPage() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Calendar</h1>
-      <HabitCalendar entries={calendarEntries} onDayClick={(date) => {
-        // TODO: Implement day click handler to add/edit entries
-        console.log("Day clicked:", date);
-      }} />
+      <HabitCalendar
+        entries={calendarEntries}
+        onDayClick={(date) => {
+          // Implement day click handler to add/edit entries
+          alert("You clicked on date: " + date.toDateString());
+          // Additional logic to open a modal or navigate to entry form can be added here
+          console.log("Day clicked:", date);
+        }}
+        onEntryClick={(entry) => {
+          setSelectedEntry(entry);
+        }}
+      />
+      {selectedEntry && selectedEntry.type === "habit" && (
+        <HabitModal
+          habit={selectedEntry}
+          onClose={() => setSelectedEntry(null)}
+          onSubmit={(updatedHabit) => {
+            // Update habitEntries state with updated habit
+            setHabitEntries((prev) =>
+              prev.map((h) => (h.id === updatedHabit.id ? updatedHabit : h))
+            );
+            setSelectedEntry(null);
+          }}
+        />
+      )}
+      {selectedEntry && selectedEntry.type === "challenge" && (
+        <ChallengeModal
+          challenge={selectedEntry}
+          onClose={() => setSelectedEntry(null)}
+          onSubmit={(updatedChallenge) => {
+            // Update challengeEntries state with updated challenge
+            setChallengeEntries((prev) =>
+              prev.map((c) => (c.id === updatedChallenge.id ? updatedChallenge : c))
+            );
+            setSelectedEntry(null);
+          }}
+        />
+      )}
     </div>
   );
 }

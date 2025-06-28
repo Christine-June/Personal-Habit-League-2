@@ -18,7 +18,7 @@ function getColorClass(name, type = "habit") {
   return colors[Math.abs(hash) % colors.length];
 }
 
-export default function HabitCalendar({ entries = [], onDayClick }) {
+export default function HabitCalendar({ entries = [], onDayClick, onEntryClick }) {
   const [value, setValue] = useState(new Date());
 
   // Group entries by date for dot rendering
@@ -37,18 +37,25 @@ export default function HabitCalendar({ entries = [], onDayClick }) {
     return (
       <div className="flex flex-col items-start mt-1 space-y-0.5 max-h-16 overflow-y-auto">
         {dayEntries.slice(0, 3).map((entry, i) => (
-          <div key={i} className="flex items-center w-full">
+          <button
+            key={i}
+            className="flex items-center w-full focus:outline-none"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onEntryClick) onEntryClick(entry);
+            }}
+            title={entry.name}
+          >
             <span
               className={`inline-block w-2 h-2 rounded-full mr-1 ${getColorClass(entry.name || "", entry.type)}`}
-              title={entry.name}
             />
-            <span className={`text-[10px] font-semibold truncate max-w-[60px] ${entry.type === "challenge" ? "text-indigo-700" : "text-gray-700"}`} title={entry.name}>
+            <span className={`text-[10px] font-semibold truncate max-w-[60px] ${entry.type === "challenge" ? "text-indigo-700" : "text-gray-700"}`}>
               {entry.name}
             </span>
             {entry.time && (
               <span className="ml-1 text-[9px] text-gray-400">{entry.time}</span>
             )}
-          </div>
+          </button>
         ))}
         {dayEntries.length > 3 && (
           <span className="text-[10px] text-gray-400">+{dayEntries.length - 3} more</span>
@@ -63,16 +70,16 @@ export default function HabitCalendar({ entries = [], onDayClick }) {
     const year = date.getFullYear();
     return (
       <div className="flex items-center justify-between mb-4 px-2">
-        <button onClick={decreaseMonth} className="p-2 rounded-full hover:bg-gray-200 text-xl">&lt;</button>
+        <button onClick={decreaseMonth} className="p-2 rounded-full hover:bg-gray-200 text-xl">{'<'}</button>
         <span className="text-lg font-bold text-gray-800">{month} {year}</span>
-        <button onClick={increaseMonth} className="p-2 rounded-full hover:bg-gray-200 text-xl">&gt;</button>
+        <button onClick={increaseMonth} className="p-2 rounded-full hover:bg-gray-200 text-xl">{'>'}</button>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-pink-50 to-purple-100 flex items-center justify-center z-40">
-      <div className="w-[90vw] h-full flex flex-col items-center justify-center px-4 py-8 mx-auto">
+    <div className="relative bg-gradient-to-br from-blue-50 via-pink-50 to-purple-100 flex items-center justify-center z-10 min-h-[80vh] p-8 rounded-2xl shadow-lg">
+      <div className="w-[90vw] h-full flex flex-col items-center justify-center px-4 py-8 mx-auto bg-white rounded-lg shadow-md">
         {/* Custom Calendar Header */}
         <CustomHeader
           date={value}
@@ -88,13 +95,26 @@ export default function HabitCalendar({ entries = [], onDayClick }) {
           next2Label={null}
           className="w-full h-full text-lg rounded-2xl shadow-xl bg-white border border-gray-200"
         />
-        <div className="mt-6 flex flex-wrap gap-4 justify-center">
-          {COLORS.map((color, i) => (
-            <span key={i} className={`inline-flex items-center gap-1`}>
-              <span className={`w-3 h-3 rounded-full ${color}`}></span>
-              <span className="text-xs text-gray-500">Habit {i + 1}</span>
-            </span>
-          ))}
+        {entries.length === 0 && (
+          <div className="mt-4 text-center text-gray-500 text-sm">No entries to display.</div>
+        )}
+        <div className="mt-6 flex flex-wrap gap-8 justify-center">
+          <div className="flex items-center gap-2">
+            {COLORS.habit.map((color, i) => (
+              <span key={i} className={`inline-flex items-center gap-1`}>
+                <span className={`w-3 h-3 rounded-full ${color}`}></span>
+                <span className="text-xs text-gray-500">Habit {i + 1}</span>
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            {COLORS.challenge.map((color, i) => (
+              <span key={i} className={`inline-flex items-center gap-1`}>
+                <span className={`w-3 h-3 rounded-full ${color}`}></span>
+                <span className="text-xs text-gray-500">Challenge {i + 1}</span>
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>

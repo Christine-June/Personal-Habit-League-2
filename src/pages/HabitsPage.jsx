@@ -13,20 +13,6 @@ import HabitForm from "../components/HabitForm";
 import HabitModal from "../components/HabitModal";
 import { MoreVertical } from "lucide-react";
 
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast"; // ✅ Toast import
-import {
-  getHabits,
-  deleteHabit,
-  updateHabit,
-  getUsers,
-  addHabit,
-} from "../api";
-import HabitForm from "../components/HabitForm";
-import HabitModal from "../components/HabitModal";
-import { MoreVertical } from "lucide-react";
-
 const HabitsPage = ({ currentUser, searchQuery }) => {
   const [habits, setHabits] = useState([]);
   const [users, setUsers] = useState([]);

@@ -1,5 +1,5 @@
 // src/App.jsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import ToastConfig from "./components/ToastConfig";
@@ -18,8 +18,6 @@ import HabitsPage from "./pages/HabitsPage"; // <-- import this
 
 import SideBar from "./components/Sidebar";
 import TopNavBar from "./components/TopNavBar";
-
-import React, { useState } from "react";
 
 function AppContent({ currentUser, setCurrentUser }) {
   const location = useLocation();
