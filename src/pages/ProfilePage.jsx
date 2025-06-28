@@ -98,22 +98,6 @@ export default function ProfilePage({ currentUser }) {
         </div>
       </div>
 
-      {/* Joined Challenges */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-3">Joined Challenges</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {(user.challenges || []).map((challenge) => (
-            <div
-              key={challenge.id}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 shadow"
-            >
-              <div className="font-bold">{challenge.name}</div>
-              <div className="text-gray-500">{challenge.description}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Logout Button */}
       <div className="mt-8 text-center">
         <button
