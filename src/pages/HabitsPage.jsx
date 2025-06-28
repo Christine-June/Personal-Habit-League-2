@@ -15,17 +15,7 @@ const HabitsPage = () => {
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-gray-100 dark:bg-black p-6 transition-colors duration-300">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">
-        Habits
-      </h1>
-    </div>
-  );
-};
-
-export default HabitsPage;
-useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -43,6 +33,7 @@ useEffect(() => {
       toast.error("Failed to load habits or users.");
     }
   };
+
   const handleAddHabit = async (newHabit) => {
     try {
       toast.loading("Adding habit...");
@@ -57,24 +48,7 @@ useEffect(() => {
     }
   };
 
-  // Add create habit UI
-      <div
-        className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-4 mb-6 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-        onClick={() => setShowModal(true)}
-      >
-        <p className="text-center text-gray-600 dark:text-gray-300">
-          + Create Habit
-        </p>
-      </div>
-
-      {showModal && (
-        <HabitModal
-          users={users}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleAddHabit}
-        />
-      )}
-      const handleDeleteHabit = async (habitId) => {
+  const handleDeleteHabit = async (habitId) => {
     try {
       toast.loading("Deleting habit...");
       await deleteHabit(habitId);
@@ -86,7 +60,23 @@ useEffect(() => {
       toast.error("Failed to delete habit.");
     }
   };
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-black p-6 transition-colors duration-300">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+        Habits
+      </h1>
+
+      <div
+        className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-4 mb-6 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        onClick={() => setShowModal(true)}
+      >
+        <p className="text-center text-gray-600 dark:text-gray-300">
+          + Create Habit
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {habits.map((habit) => (
           <div
             key={habit.id}
@@ -124,3 +114,16 @@ useEffect(() => {
           </div>
         ))}
       </div>
+
+      {showModal && (
+        <HabitModal
+          users={users}
+          onClose={() => setShowModal(false)}
+          onSubmit={handleAddHabit}
+        />
+      )}
+    </div>
+  );
+};
+
+export default HabitsPage;
