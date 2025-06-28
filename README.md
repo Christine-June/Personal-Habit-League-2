@@ -3,7 +3,7 @@
 This is the frontend for the **Personal Habit Challenge League**, a web application that allows users to track and compete in habit challenges, view leaderboard rankings, and manage their personal growth journey in a fun, gamified environment. Built with **React** and styled using **Tailwind CSS**, the frontend interfaces with a Flask backend via RESTful APIs.
 
 > 👉 **Backend Repository Link:** [https://github.com/Christine-June/Personal-Habit-Challenge-League]  
-> 👉 **Live App Link (optional):** [Deployment link]
+> 👉 **Live App Link:** [https://vercel.com/christine-junes-projects/personal-habit-league-2]
 
 ---
 

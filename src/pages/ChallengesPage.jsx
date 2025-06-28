@@ -1,9 +1,10 @@
 // src/pages/ChallengesPage.jsx
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   getChallenges,
   addChallenge,
-  updateChallenge,
   deleteChallenge,
   getUsers,
 } from '../api';
@@ -13,7 +14,6 @@ const ChallengesPage = () => {
   const [challenges, setChallenges] = useState([]);
   const [users, setUsers] = useState([]);
   const [formVisible, setFormVisible] = useState(false);
-  const [editingChallenge, setEditingChallenge] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -21,6 +21,7 @@ const ChallengesPage = () => {
     end_date: '',
     created_by: '',
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchChallenges();
@@ -45,21 +46,11 @@ const ChallengesPage = () => {
     }));
   }
 
-  function handleEditClick(challenge) {
-    setEditingChallenge(challenge);
-    setFormData({
-      name: challenge.name,
-      description: challenge.description,
-      start_date: challenge.start_date,
-      end_date: challenge.end_date,
-      created_by: challenge.created_by,
-    });
-    setFormVisible(true);
-  }
-
   async function handleDelete(id) {
     if (window.confirm('Are you sure you want to delete this challenge?')) {
+      toast.loading('Deleting challenge...');
       await deleteChallenge(id);
+      toast.success('Challenge deleted!');
       fetchChallenges();
     }
   }
@@ -68,13 +59,9 @@ const ChallengesPage = () => {
     e.preventDefault();
     console.log('Submitting:', formData);
     try {
-      if (editingChallenge) {
-        await updateChallenge(editingChallenge.id, formData);
-      } else {
-        await addChallenge(formData);
-      }
+      toast.loading('Creating challenge...');
+      await addChallenge(formData);
       setFormVisible(false);
-      setEditingChallenge(null);
       setFormData({
         name: '',
         description: '',
@@ -83,6 +70,7 @@ const ChallengesPage = () => {
         created_by: '',
       });
       fetchChallenges();
+      toast.success('Challenge created!');
     } catch (err) {
       console.error('Submission error:', err);
       alert('Something went wrong! Check that all fields are valid.');
@@ -95,7 +83,6 @@ const ChallengesPage = () => {
         <h2 className="text-2xl font-bold">Challenges</h2>
         <button
           onClick={() => {
-            setEditingChallenge(null);
             setFormData({
               name: '',
               description: '',
@@ -171,13 +158,12 @@ const ChallengesPage = () => {
               type="submit"
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-              {editingChallenge ? 'Update' : 'Create'} Challenge
+              Create Challenge
             </button>
             <button
               type="button"
               onClick={() => {
                 setFormVisible(false);
-                setEditingChallenge(null);
               }}
               className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
             >
@@ -208,10 +194,10 @@ const ChallengesPage = () => {
               <td className="px-4 py-2">{challenge.created_by}</td>
               <td className="px-4 py-2 space-x-2">
                 <button
-                  onClick={() => handleEditClick(challenge)}
-                  className="px-3 py-1 bg-yellow-400 rounded text-white"
+                  onClick={() => navigate(`/challenges/${challenge.id}`)}
+                  className="px-3 py-1 bg-blue-500 rounded text-white"
                 >
-                  Edit
+                  View
                 </button>
                 <button
                   onClick={() => handleDelete(challenge.id)}
