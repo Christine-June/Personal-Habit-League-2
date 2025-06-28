@@ -1,8 +1,8 @@
+// src/api.js
 import axios from 'axios';
-
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-// HABITS
+// habbits
 export function getHabits() {
   const token = localStorage.getItem('token');
   return axios.get(`${BASE_URL}/habits/`, {
@@ -25,12 +25,7 @@ export async function updateHabit(habitId, updatedData) {
 export const deleteHabit = (habitId) =>
   axios.delete(`${BASE_URL}/habits/${habitId}`);
 
-export async function getUsers() {
-  const res = await axios.get(`${BASE_URL}/users/`);
-  return res.data;
-}
-
-// ✅ CHALLENGES
+// challenges
 export async function getChallenges() {
   const res = await axios.get(`${BASE_URL}/challenges/`);
   return res.data;
@@ -51,25 +46,37 @@ export async function deleteChallenge(id) {
   return res.data;
 }
 
-// CHALLENGE PARTICIPANTS
+// challenge participants
 export const getChallengeParticipants = (challengeId) =>
-  axios.get(`${BASE_URL}/challenges/${challengeId}/participants`);
+  axios.get(`${BASE_URL}/challenges/${challengeId}/participants`).then(res => res.data);
 
 export const addParticipantToChallenge = (challengeId, data) =>
   axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data);
 
-// USER HABITS
+// challenge entries
+export const getChallengeEntries = (challengeId) =>
+  axios.get(`${BASE_URL}/challenges/${challengeId}/entries`).then(res => res.data);
+
+export const createChallengeEntry = (challengeId, entryData) =>
+  axios.post(`${BASE_URL}/challenges/${challengeId}/entries`, entryData).then(res => res.data);
+
+// user habits
 export const getUserHabits = (userId) =>
   axios.get(`${BASE_URL}/users/${userId}/habits`).then(res => res.data);
 
-// HABIT ENTRIES
+// habit entries
 export const getHabitEntries = (params = {}) =>
   axios.get(`${BASE_URL}/habit-entries`, { params }).then(res => res.data);
 
 export const createHabitEntry = (entry) =>
   axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
 
-// LOGIN
+export async function getUsers() {
+  const res = await axios.get(`${BASE_URL}/users/`);
+  return res.data;
+}
+
+// login
 export async function login(credentials) {
   const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
@@ -85,7 +92,7 @@ export async function login(credentials) {
   }
 }
 
-// PROTECTED ROUTE EXAMPLE
+// protected routes
 export function getProtectedUser() {
   const token = localStorage.getItem('token');
   return axios.get(`${BASE_URL}/protected`, {
