@@ -52,3 +52,21 @@ export const getChallengeParticipants = (challengeId) =>
 
 export const addParticipantToChallenge = (challengeId, data) =>
   axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data);
+
+// challenge entries
+export const getChallengeEntries = (challengeId) =>
+  axios.get(`${BASE_URL}/challenges/${challengeId}/entries`).then(res => res.data);
+
+export const createChallengeEntry = (challengeId, entryData) =>
+  axios.post(`${BASE_URL}/challenges/${challengeId}/entries`, entryData).then(res => res.data);
+
+// user habits
+export const getUserHabits = (userId) =>
+  axios.get(`${BASE_URL}/users/${userId}/habits`).then(res => res.data);
+
+// habit entries
+export const getHabitEntries = (params = {}) =>
+  axios.get(`${BASE_URL}/habit-entries`, { params }).then(res => res.data);
+
+export const createHabitEntry = (entry) =>
+  axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
