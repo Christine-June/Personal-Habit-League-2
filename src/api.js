@@ -70,3 +70,40 @@ export const getHabitEntries = (params = {}) =>
 
 export const createHabitEntry = (entry) =>
   axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
+
+export async function getUsers() {
+  const res = await axios.get(`${BASE_URL}/users/`);
+  return res.data;
+}
+
+// login
+export async function login(credentials) {
+  const response = await fetch(`${BASE_URL}/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials),
+  });
+  const data = await response.json();
+  if (data.access_token) {
+    localStorage.setItem('token', data.access_token);
+    return data.user;
+  } else {
+    throw new Error(data.error || 'Login failed');
+  }
+}
+
+// protected routes
+export function getProtectedUser() {
+  const token = localStorage.getItem('token');
+  return axios.get(`${BASE_URL}/protected`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }).then(res => res.data);
+}
+
+export async function updateUser(userId, data) {
+  const token = localStorage.getItem('token');
+  const res = await axios.patch(`${BASE_URL}/users/${userId}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}
