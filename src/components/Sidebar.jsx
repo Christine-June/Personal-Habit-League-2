@@ -62,19 +62,21 @@ export default function Sidebar({ expanded, setExpanded }) {
           +
         </button>
         {showMenu && (
-          <div className="absolute left-14 bottom-0 bg-white border rounded shadow-lg z-50 flex flex-col">
-            <button
-              className="px-4 py-2 hover:bg-indigo-100 text-left"
-              onClick={() => handleAdd("habit")}
-            >
-              Add Habit
-            </button>
-            <button
-              className="px-4 py-2 hover:bg-indigo-100 text-left"
-              onClick={() => handleAdd("challenge")}
-            >
-              Add Challenge
-            </button>
+          <div className="absolute left-14 bottom-0 bg-white border rounded shadow-lg z-50">
+            <ul className="bg-white shadow rounded p-2 w-48 space-y-2">
+              <li
+                className="mb-2 px-3 py-1 rounded bg-green-100 text-green-800 hover:bg-green-200 cursor-pointer"
+                onClick={() => handleAdd("habit")}
+              >
+                Add Habit
+              </li>
+              <li
+                className="px-3 py-1 rounded bg-yellow-100 text-yellow-800 hover:bg-yellow-200 cursor-pointer"
+                onClick={() => handleAdd("challenge")}
+              >
+                Add Challenge
+              </li>
+            </ul>
           </div>
         )}
       </div>
