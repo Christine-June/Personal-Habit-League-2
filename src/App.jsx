@@ -37,3 +37,40 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SideBar from './components/SideBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+function AppContent({ currentUser, setCurrentUser }) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const location = useLocation();
+
+  const isMinimalPage = ["/auth", "/privacy", "/terms", "/cookies"].includes(location.pathname);
+
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row bg-white dark:bg-black transition-colors duration-300">
+      {!isMinimalPage && (
+        <SideBar
+          expanded={sidebarExpanded}
+          setExpanded={setSidebarExpanded}
+          currentUser={currentUser}
+        />
+      )}
+      <div className="flex-1 flex flex-col">
+        {!isMinimalPage && (
+          <Navbar sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
+        )}
+        <div className={`flex-grow ${!isMinimalPage ? 'pt-16 pb-24' : ''}`}>
+          {/* Routes will be added here */}
+        </div>
+        {!isMinimalPage && <Footer sidebarExpanded={sidebarExpanded} />}
+      </div>
+    </div>
+  )
+}
+<Routes>
+            <Route path="/" element={<Navigate to="/auth" />} />
+            <Route path="/auth" element={<LoginSignupPage setCurrentUser={setCurrentUser} />} />
+            <Route path="/home" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/habits" element={<ProtectedRoute><HabitsPage /></ProtectedRoute>} />
+            <Route path="/challenges" element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
+          </Routes>
+
+          
