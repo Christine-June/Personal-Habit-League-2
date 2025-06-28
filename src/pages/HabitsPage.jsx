@@ -86,3 +86,41 @@ useEffect(() => {
       toast.error("Failed to delete habit.");
     }
   };
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {habits.map((habit) => (
+          <div
+            key={habit.id}
+            className="relative bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 transition-colors"
+          >
+            <div className="absolute top-2 right-2 group">
+              <MoreVertical className="cursor-pointer text-gray-700 dark:text-gray-300" />
+              <div className="hidden group-hover:flex flex-col absolute right-0 mt-2 bg-white dark:bg-gray-900 shadow border rounded z-10">
+                <button
+                  onClick={() => { /* Edit functionality removed */ }}
+                  className="px-4 py-2 text-left text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteHabit(habit.id)}
+                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-left text-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+              {habit.name}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+              {habit.description}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+              Frequency: {habit.frequency}
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+              User: {habit.user_id}
+            </p>
+          </div>
+        ))}
+      </div>
