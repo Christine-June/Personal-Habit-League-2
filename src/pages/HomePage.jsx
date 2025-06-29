@@ -1,46 +1,44 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Add this import
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage({ sidebarExpanded }) {
   const marginClass = sidebarExpanded ? 'md:ml-64' : 'md:ml-20';
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   return (
-    <div className={`min-h-screen flex flex-col bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-colors duration-300 pt-16 ${marginClass}`}>
+    <div className={`min-h-screen flex flex-col bg-gradient-to-br from-white to-gray-100 dark:from-black dark:to-gray-900 transition-colors duration-300 pt-16 ${marginClass}`}>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8">
-        <div className="bg-white dark:bg-gray-900 bg-opacity-70 dark:bg-opacity-90 backdrop-blur-md shadow-xl rounded-3xl p-8 w-full max-w-md transition hover:shadow-2xl">
-          <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">
-            Your Habit League HQ
-          </h2>
-          <p className="text-gray-500 dark:text-gray-300 text-center mb-6">
-            Build. Track. Win. Small habits, big changes — start your journey today.
-          </p>
+      {/* Hero Section */}
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-800 dark:text-white leading-tight mb-4">
+          Welcome to the Personal Habit League
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
+          Join the journey. Build positive habits. Compete. Grow. One step at a time.
+        </p>
 
-          <div className="flex flex-col gap-4">
-            <button
-              className="bg-indigo-500 text-white py-3 rounded-xl hover:bg-indigo-600 transition"
-              onClick={() => navigate('/challenges', { state: { showNewChallengeModal: true } })}
-            >
-              + Start New Challenge
-            </button>
-            <button
-              className="bg-purple-500 text-white py-3 rounded-xl hover:bg-purple-600 transition"
-              onClick={() => navigate('/challenges')}
-            >
-              View Existing Challenges
-            </button>
-            <button
-              className="bg-pink-400 text-white py-3 rounded-xl hover:bg-pink-500 transition"
-              onClick={() => navigate('/habits')}
-            >
-              Track Today's Habit
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-lg px-6 py-3 rounded-full transition shadow-md"
+            onClick={() => navigate('/challenges', { state: { showNewChallengeModal: true } })}
+          >
+            + Start New Challenge
+          </button>
+          <button
+            className="bg-purple-600 hover:bg-purple-700 text-white text-lg px-6 py-3 rounded-full transition shadow-md"
+            onClick={() => navigate('/challenges')}
+          >
+            View Challenges
+          </button>
+          <button
+            className="bg-pink-500 hover:bg-pink-600 text-white text-lg px-6 py-3 rounded-full transition shadow-md"
+            onClick={() => navigate('/habits')}
+          >
+            Track Today’s Habit
+          </button>
         </div>
 
-        <p className="mt-8 text-sm text-gray-400 dark:text-gray-300 text-center">
+        <p className="mt-10 text-md italic text-gray-500 dark:text-gray-400">
           "Consistency is more important than perfection."
         </p>
       </div>

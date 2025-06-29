@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -15,6 +14,7 @@ import UserHabitsPage from './pages/UserHabitsPage';
 import ChallengeParticipantsPage from './pages/ChallengeParticipantsPage';
 import ChallengeEntriesPage from './pages/ChallengeEntriesPage';
 import HabitEntriesPage from './pages/HabitEntriesPage';
+import ChallengeDetailPage from './pages/ChallengeDetailPage'; // New Import
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookieSettings from './pages/CookieSettings';
@@ -55,6 +55,7 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/habits" element={<ProtectedRoute><HabitsPage /></ProtectedRoute>} />
             <Route path="/challenges" element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
             <Route path="/user-habits" element={<UserHabitsPage />} />
+            <Route path="/challenges/:challengeId" element={<ProtectedRoute><ChallengeDetailPage /></ProtectedRoute>} /> {/* New Route */}
             <Route path="/challenge-participants" element={<ChallengeParticipantsPage />} />
             <Route path="/challenge-entries" element={<ChallengeEntriesPage />} />
             <Route path="/habit-entries" element={<ProtectedRoute><HabitEntriesPage /></ProtectedRoute>} />

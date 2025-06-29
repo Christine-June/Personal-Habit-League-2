@@ -1,10 +1,9 @@
 // src/pages/HabitsPage.jsx
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast"; // ✅ Toast import
+import toast from "react-hot-toast";
 import {
   getHabits,
   deleteHabit,
-  updateHabit,
   getUsers,
   addHabit,
 } from "../api";
@@ -15,7 +14,6 @@ const HabitsPage = () => {
   const [habits, setHabits] = useState([]);
   const [users, setUsers] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [editingHabit, setEditingHabit] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -50,20 +48,6 @@ const HabitsPage = () => {
     }
   };
 
-  const handleUpdateHabit = async (updatedHabit) => {
-    try {
-      toast.loading("Updating habit...");
-      await updateHabit(updatedHabit.id, updatedHabit);
-      setEditingHabit(null);
-      await fetchData();
-      toast.dismiss();
-      toast.success("Habit updated successfully!");
-    } catch (err) {
-      toast.dismiss();
-      toast.error("Failed to update habit.");
-    }
-  };
-
   const handleDeleteHabit = async (habitId) => {
     try {
       toast.loading("Deleting habit...");
@@ -83,7 +67,6 @@ const HabitsPage = () => {
         Habits
       </h1>
 
-      {/* Create Card */}
       <div
         className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-4 mb-6 bg-white dark:bg-gray-900 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         onClick={() => setShowModal(true)}
@@ -93,7 +76,6 @@ const HabitsPage = () => {
         </p>
       </div>
 
-      {/* Habit Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {habits.map((habit) => (
           <div
@@ -104,8 +86,8 @@ const HabitsPage = () => {
               <MoreVertical className="cursor-pointer text-gray-700 dark:text-gray-300" />
               <div className="hidden group-hover:flex flex-col absolute right-0 mt-2 bg-white dark:bg-gray-900 shadow border rounded z-10">
                 <button
-                  onClick={() => setEditingHabit(habit)}
-                  className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 text-left text-gray-700 dark:text-gray-200"
+                  onClick={() => { /* Edit functionality removed */ }}
+                  className="px-4 py-2 text-left text-gray-400 dark:text-gray-500 cursor-not-allowed"
                 >
                   Edit
                 </button>
@@ -138,15 +120,6 @@ const HabitsPage = () => {
           users={users}
           onClose={() => setShowModal(false)}
           onSubmit={handleAddHabit}
-        />
-      )}
-
-      {editingHabit && (
-        <HabitModal
-          users={users}
-          habit={editingHabit}
-          onClose={() => setEditingHabit(null)}
-          onSubmit={handleUpdateHabit}
         />
       )}
     </div>
