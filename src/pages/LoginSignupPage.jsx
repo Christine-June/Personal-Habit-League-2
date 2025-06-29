@@ -204,7 +204,7 @@ function LoginSignupPage() {
               <div className="p-8">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                    {mode === 'login' ? 'Welcome Back!' : 'Join HabitForge'}
+                    {mode === 'login' ? 'Welcome Back!' : 'Join Habit Personal League'}
                   </h1>
                   <p className="text-gray-500">
                     {mode === 'login' 
