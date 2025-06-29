@@ -1,11 +1,10 @@
-// src/pages/ChallengesPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   getChallenges,
   addChallenge,
-  deleteChallenge,
+  // deleteChallenge, ❌ removed
 } from '../api';
 import { motion } from 'framer-motion';
 
@@ -41,15 +40,6 @@ const ChallengesPage = () => {
     }));
   }
 
-  async function handleDelete(id) {
-    if (window.confirm('Are you sure you want to delete this challenge?')) {
-      toast.loading('Deleting challenge...');
-      await deleteChallenge(id);
-      toast.success('Challenge deleted!');
-      fetchChallenges();
-    }
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -74,7 +64,7 @@ const ChallengesPage = () => {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">🏆 Challenges</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">🏆 Challenges</h2>
         <button
           onClick={() => {
             setFormData({
@@ -97,7 +87,7 @@ const ChallengesPage = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           onSubmit={handleSubmit}
-          className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-6 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <input
             type="text"
@@ -105,7 +95,7 @@ const ChallengesPage = () => {
             placeholder="Challenge Name"
             value={formData.name}
             onChange={handleInputChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white"
             required
           />
           <input
@@ -114,7 +104,7 @@ const ChallengesPage = () => {
             placeholder="Description"
             value={formData.description}
             onChange={handleInputChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white"
             required
           />
           <input
@@ -122,7 +112,7 @@ const ChallengesPage = () => {
             name="start_date"
             value={formData.start_date}
             onChange={handleInputChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white"
             required
           />
           <input
@@ -130,7 +120,7 @@ const ChallengesPage = () => {
             name="end_date"
             value={formData.end_date}
             onChange={handleInputChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white dark:bg-gray-800 text-black dark:text-white"
             required
           />
           <div className="col-span-1 md:col-span-2 flex gap-4">
@@ -143,7 +133,7 @@ const ChallengesPage = () => {
             <button
               type="button"
               onClick={() => setFormVisible(false)}
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+              className="bg-gray-300 text-gray-700 dark:text-gray-100 dark:bg-gray-700 px-4 py-2 rounded hover:bg-gray-400"
             >
               Cancel
             </button>
@@ -152,8 +142,8 @@ const ChallengesPage = () => {
       )}
 
       <div className="overflow-x-auto shadow rounded-lg">
-        <table className="min-w-full bg-white border text-sm">
-          <thead className="bg-gray-100">
+        <table className="min-w-full border text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+          <thead className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
             <tr>
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Description</th>
@@ -165,27 +155,19 @@ const ChallengesPage = () => {
           </thead>
           <tbody>
             {challenges.map((challenge) => (
-              <tr key={challenge.id} className="border-t hover:bg-gray-50">
+              <tr key={challenge.id} className="border-t hover:bg-gray-50 dark:hover:bg-gray-800">
                 <td className="px-4 py-2">{challenge.name}</td>
                 <td className="px-4 py-2">{challenge.description}</td>
                 <td className="px-4 py-2">{challenge.start_date}</td>
                 <td className="px-4 py-2">{challenge.end_date}</td>
                 <td className="px-4 py-2">{challenge.created_by}</td>
                 <td className="px-4 py-2">
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => navigate(`/challenges/${challenge.id}`)}
-                      className="px-3 py-1 bg-blue-500 rounded-md text-white hover:bg-blue-600"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleDelete(challenge.id)}
-                      className="px-3 py-1 bg-red-500 rounded-md text-white hover:bg-red-600"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => navigate(`/challenges/${challenge.id}`)}
+                    className="px-3 py-1 bg-blue-500 rounded-md text-white hover:bg-blue-600"
+                  >
+                    View
+                  </button>
                 </td>
               </tr>
             ))}
