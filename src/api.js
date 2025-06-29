@@ -29,7 +29,7 @@ export async function getUsers() {
 
 // ✅ CHALLENGES
 export async function getChallenges() {
-  const res = await axios.get(`${BASE_URL}/challenges/`);
+  const res = await axios.get(`${BASE_URL}/challenges`);
   return res.data;
 }
 

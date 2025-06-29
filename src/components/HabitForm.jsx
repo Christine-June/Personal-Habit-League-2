@@ -9,7 +9,7 @@ const HabitSchema = Yup.object().shape({
   user_id: Yup.number().required("User is required"),
 });
 
-export default function HabitForm({ onClose, onSave, initialData = {}, users }) {
+export default function HabitForm({ onClose, onSave, initialData = {}, users, currentUser }) {
   return (
     <Formik
       initialValues={{
@@ -20,7 +20,7 @@ export default function HabitForm({ onClose, onSave, initialData = {}, users }) 
       }}
       validationSchema={HabitSchema}
       onSubmit={async (values, { setSubmitting }) => {
-        await onSave(values);
+        await onSave({ ...values, user_id: currentUser.id });
         setSubmitting(false);
       }}
     >

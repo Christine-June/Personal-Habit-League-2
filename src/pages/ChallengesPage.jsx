@@ -42,7 +42,11 @@ export default function ChallengesPage({ searchQuery }) {
   };
 
   const handleSaveChallenge = async (challengeData) => {
-    await axios.post(`${BASE_URL}/challenges`, challengeData);
+    // Always include created_by
+    await axios.post(`${BASE_URL}/challenges`, {
+      ...challengeData,
+      created_by: currentUser.id,
+    });
     handleCloseModal();
     navigate("/home"); // Redirect to feed after creation
   };

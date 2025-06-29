@@ -8,7 +8,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import "./App.css";
 
 import HomePage from "./pages/HomePage";
-import CalendarPage from "./pages/CalendarPage"; // You may need to create this if not present
+import ChallengeCalendarPage from "./pages/ChallengeCalendarPage";
 import ChatLog from "./components/ChatLog";
 import ChallengesPage from "./pages/ChallengesPage";
 import LeaderboardPage from "./pages/LeaderboardPage"; // You may need to create this if not present
@@ -41,7 +41,7 @@ function AppContent({ currentUser, setCurrentUser }) {
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage currentUser={currentUser} />} />
-            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/calendar" element={<ChallengeCalendarPage currentUser={currentUser} />} />
             <Route path="/chat" element={<ChatLog currentUser={currentUser} />} />
             <Route path="/challenges" element={<ChallengesPage searchQuery={searchQuery} />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
