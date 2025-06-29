@@ -89,7 +89,7 @@ function LoginSignupPage() {
         {/* Left side - Feature highlights */}
         <div className="hidden md:flex flex-col justify-center p-8 bg-gradient-to-b from-blue-600 to-indigo-700 text-white w-1/2">
           <div className="max-w-xs mx-auto">
-            <h2 className="text-3xl font-bold mb-6">Welcome to Habit Personal League</h2>
+            <h2 className="text-3xl font-bold mb-6">Welcome to Personal Habit League</h2>
             <p className="text-blue-100 mb-8">
               Build better habits, track your progress, and compete in the Personal Habit League to stay motivated.
             </p>
@@ -204,7 +204,7 @@ function LoginSignupPage() {
               <div className="p-8">
                 <div className="text-center mb-8">
                   <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                    {mode === 'login' ? 'Welcome Back!' : 'Join HabitForge'}
+                    {mode === 'login' ? 'Welcome Back!' : 'Join Personal Habit League'}
                   </h1>
                   <p className="text-gray-500">
                     {mode === 'login' 
