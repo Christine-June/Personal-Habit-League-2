@@ -192,20 +192,23 @@ const ChallengesPage = () => {
               <td className="px-4 py-2">{challenge.start_date}</td>
               <td className="px-4 py-2">{challenge.end_date}</td>
               <td className="px-4 py-2">{challenge.created_by}</td>
-              <td className="px-4 py-2 space-x-2">
-                <button
-                  onClick={() => navigate(`/challenges/${challenge.id}`)}
-                  className="px-3 py-1 bg-blue-500 rounded text-white"
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleDelete(challenge.id)}
-                  className="px-3 py-1 bg-red-500 rounded text-white"
-                >
-                  Delete
-                </button>
-              </td>
+            <td className="px-4 py-2">
+  <div className="flex items-center gap-2">
+    <button
+      onClick={() => navigate(`/challenges/${challenge.id}`)}
+      className="px-3 py-1 bg-blue-500 rounded text-white hover:bg-blue-600"
+    >
+      View
+    </button>
+    <button
+      onClick={() => handleDelete(challenge.id)}
+      className="px-3 py-1 bg-red-500 rounded text-white hover:bg-red-600"
+    >
+      Delete
+    </button>
+  </div>
+</td>
+
             </tr>
           ))}
         </tbody>
