@@ -1,109 +1,112 @@
 // src/api.js
-import axios from 'axios';
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from './utils/axiosConfig';
 
-// habbits
-export function getHabits() {
-  const token = localStorage.getItem('token');
-  return axios.get(`${BASE_URL}/habits/`, {
-    headers: { Authorization: `Bearer ${token}` }
-  }).then(res => res.data);
+// habits
+export function getHabits(params = {}) {
+  return apiClient.get('/habits', { params }).then(res => res.data);
 }
 
-export async function addHabit(habitData) {
-  const token = localStorage.getItem('token');
-  axios.post(`${BASE_URL}/habits/`, habitData, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export function addHabit(habitData) {
+  return apiClient.post('/habits', habitData).then(res => res.data);
 }
 
-export async function updateHabit(habitId, updatedData) {
-  const res = await axios.patch(`${BASE_URL}/habits/${habitId}`, updatedData);
-  return res.data;
+export function updateHabit(habitId, updatedData) {
+  return apiClient.patch(`/habits/${habitId}`, updatedData).then(res => res.data);
 }
 
-export const deleteHabit = (habitId) =>
-  axios.delete(`${BASE_URL}/habits/${habitId}`);
+export function deleteHabit(habitId) {
+  return apiClient.delete(`/habits/${habitId}`).then(res => res.data);
+}
 
 // challenges
-export async function getChallenges() {
-  const res = await axios.get(`${BASE_URL}/challenges/`);
-  return res.data;
+export function getChallenges(params = {}) {
+  return apiClient.get('/challenges', { params }).then(res => res.data);
 }
 
-export async function addChallenge(challengeData) {
-  const res = await axios.post(`${BASE_URL}/challenges/`, challengeData);
-  return res.data;
+export function addChallenge(challengeData) {
+  return apiClient.post('/challenges', challengeData).then(res => res.data);
 }
 
-export async function updateChallenge(id, updatedData) {
-  const res = await axios.patch(`${BASE_URL}/challenges/${id}`, updatedData);
-  return res.data;
+export function updateChallenge(id, updatedData) {
+  return apiClient.patch(`/challenges/${id}`, updatedData).then(res => res.data);
 }
 
-export async function deleteChallenge(id) {
-  const res = await axios.delete(`${BASE_URL}/challenges/${id}`);
-  return res.data;
+export function deleteChallenge(id) {
+  return apiClient.delete(`/challenges/${id}`).then(res => res.data);
 }
 
 // challenge participants
-export const getChallengeParticipants = (challengeId) =>
-  axios.get(`${BASE_URL}/challenges/${challengeId}/participants`).then(res => res.data);
+export function getChallengeParticipants(challengeId) {
+  return apiClient.get(`/challenges/${challengeId}/participants`).then(res => res.data);
+}
 
-export const addParticipantToChallenge = (challengeId, data) =>
-  axios.post(`${BASE_URL}/challenges/${challengeId}/participants`, data);
+export function addParticipantToChallenge(challengeId, data) {
+  return apiClient.post(`/challenges/${challengeId}/participants`, data).then(res => res.data);
+}
 
 // challenge entries
-export const getChallengeEntries = (challengeId) =>
-  axios.get(`${BASE_URL}/challenges/${challengeId}/entries`).then(res => res.data);
+export function getChallengeEntries(challengeId) {
+  return apiClient.get(`/challenges/${challengeId}/entries`).then(res => res.data);
+}
 
-export const createChallengeEntry = (challengeId, entryData) =>
-  axios.post(`${BASE_URL}/challenges/${challengeId}/entries`, entryData).then(res => res.data);
+export function createChallengeEntry(challengeId, entryData) {
+  return apiClient.post(`/challenges/${challengeId}/entries`, entryData).then(res => res.data);
+}
 
 // user habits
-export const getUserHabits = (userId) =>
-  axios.get(`${BASE_URL}/users/${userId}/habits`).then(res => res.data);
+export function getUserHabits(userId) {
+  return apiClient.get(`/users/${userId}/habits`).then(res => res.data);
+}
 
 // habit entries
-export const getHabitEntries = (params = {}) =>
-  axios.get(`${BASE_URL}/habit-entries`, { params }).then(res => res.data);
+export function getHabitEntries(params = {}) {
+  return apiClient.get('/habit-entries', { params }).then(res => res.data);
+}
 
-export const createHabitEntry = (entry) =>
-  axios.post(`${BASE_URL}/habit-entries`, entry).then(res => res.data);
+export function createHabitEntry(entry) {
+  return apiClient.post('/habit-entries', entry).then(res => res.data);
+}
 
-export async function getUsers() {
-  const res = await axios.get(`${BASE_URL}/users/`);
-  return res.data;
+export function updateHabitEntry(entryId, updatedData) {
+  return apiClient.patch(`/habit-entries/${entryId}`, updatedData).then(res => res.data);
+}
+
+export function deleteHabitEntry(entryId) {
+  return apiClient.delete(`/habit-entries/${entryId}`).then(res => res.data);
+}
+
+// users
+export function getUsers() {
+  // This will now correctly send credentials (cookies) and the Authorization header
+  // if a token is present in localStorage due to axiosConfig.js setup.
+  return apiClient.get('/users').then(res => res.data);
 }
 
 // login
 export async function login(credentials) {
-  const response = await fetch(`${BASE_URL}/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(credentials),
-  });
-  const data = await response.json();
-  if (data.access_token) {
-    localStorage.setItem('token', data.access_token);
-    return data.user;
+  // login request does not need Authorization header initially
+  const response = await apiClient.post('/auth/login', credentials);
+  if (response.data.access_token) {
+    localStorage.setItem('token', response.data.access_token);
+    if (response.data.refresh_token) {
+      localStorage.setItem('refreshToken', response.data.refresh_token);
+    }
+    return response.data.user || response.data;
   } else {
-    throw new Error(data.error || 'Login failed');
+    throw new Error(response.data.error || 'Login failed');
   }
 }
 
 // protected routes
 export function getProtectedUser() {
-  const token = localStorage.getItem('token');
-  return axios.get(`${BASE_URL}/protected`, {
-    headers: { Authorization: `Bearer ${token}` }
-  }).then(res => res.data);
+  // This will now correctly send credentials (cookies) and the Authorization header
+  // if a token is present in localStorage due to axiosConfig.js setup.
+  return apiClient.get('/protected').then(res => res.data);
 }
 
 export async function updateUser(userId, data) {
-  const token = localStorage.getItem('token');
-  const res = await axios.patch(`${BASE_URL}/users/${userId}`, data, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  // REMOVED the manual Authorization header setting.
+  // The request interceptor in axiosConfig.js will automatically add it.
+  const res = await apiClient.patch(`/users/${userId}`, data);
   return res.data;
 }

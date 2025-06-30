@@ -26,9 +26,10 @@ export default function SideBar({ expanded, setExpanded }) {
 
   const navItems = [
     { path: '/home', name: 'Home', icon: '🏠', hoverText: 'Home' },
-    { path: '/habits', name: 'Habits', icon: '📝', hoverText: 'Track habits' },
-    { path: '/chat', name: 'Chat Log', icon: '💬', hoverText: 'View chat log' },
+    { path: '/habits', name: 'Habits', icon: '📝', hoverText: 'Manage your habits' },
+    { path: '/habits/calendar', name: 'Habit Calendar', icon: '📅', hoverText: 'Track your habit progress' },
     { path: '/challenges', name: 'Challenges', icon: '🏆', hoverText: 'Join challenges' },
+    { path: '/chat', name: 'Chat Log', icon: '💬', hoverText: 'View chat log' },
     { path: '/users', name: 'Community', icon: '👥', hoverText: 'Connect with others' },
     { path: '/privacy', name: 'Privacy Policy', icon: '🔒', hoverText: 'Privacy Policy' },
     { path: '/terms', name: 'Terms of Service', icon: '📄', hoverText: 'Terms of Service' },
