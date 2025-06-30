@@ -12,7 +12,7 @@ const HabitSchema = Yup.object().shape({
   description: Yup.string(),
 });
 
-const HabitModal = ({ users, habit = null, onClose, onSubmit }) => {
+const HabitModal = ({ users = [], habit = null, onClose, onSubmit }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
@@ -30,7 +30,7 @@ const HabitModal = ({ users, habit = null, onClose, onSubmit }) => {
             name: habit?.name || "",
             description: habit?.description || "",
             frequency: habit?.frequency || "daily",
-            user_id: habit?.user_id || (users.length ? users[0].id : ""),
+            user_id: habit?.user_id || (users?.length > 0 ? users[0].id : ""),
           }}
           validationSchema={HabitSchema}
           onSubmit={async (values, { setSubmitting }) => {
