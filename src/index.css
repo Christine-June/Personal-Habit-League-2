@@ -7,3 +7,17 @@ html, body {
   @apply bg-white text-black dark:bg-black dark:text-white transition-colors duration-300;
   min-height: 100%;
 }
+
+/* Tooltip styles */
+.tooltip {
+  @apply relative inline-block;
+}
+
+.tooltip::before {
+  @apply absolute z-10 px-2 py-1 text-xs text-white bg-gray-900 rounded-md opacity-0 invisible transition-all duration-200 transform -translate-x-1/2 left-1/2 -top-8 whitespace-nowrap;
+  content: attr(data-tip);
+}
+
+.tooltip:hover::before {
+  @apply opacity-100 visible -translate-y-1;
+}

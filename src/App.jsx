@@ -1,31 +1,37 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import ToastConfig from './components/ToastConfig';
 
-import { ThemeProvider } from './context/ThemeContext';
-import './App.css';
+// Context Providers
+import { ThemeProvider } from '@/context/ThemeContext';
+import { HabitsProvider } from '@/context/HabitsContext';
 
-import HomePage from './pages/HomePage';
-import UsersPage from './pages/UsersPage';
-import HabitsPage from './pages/HabitsPage';
-import ChallengesPage from './pages/ChallengesPage';
-import UserHabitsPage from './pages/UserHabitsPage';
-import ChallengeParticipantsPage from './pages/ChallengeParticipantsPage';
-import ChallengeEntriesPage from './pages/ChallengeEntriesPage';
-import HabitEntriesPage from './pages/HabitEntriesPage';
-import ChallengeDetailPage from './pages/ChallengeDetailPage'; // New Import
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import CookieSettings from './pages/CookieSettings';
-import LoginSignupPage from './pages/LoginSignupPage';
-import ChatLog from "./components/ChatLog";
-import ProtectedRoute from './components/ProtectedRoute';
-import BlogPage from './pages/BlogPage';
+// Components
+import ToastConfig from '@/components/ToastConfig';
+import ChatLog from "@/components/ChatLog";
+import ProtectedRoute from '@/components/ProtectedRoute';
+import SideBar from '@/components/SideBar';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-import SideBar from './components/SideBar';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+// Pages
+import HomePage from '@/pages/HomePage';
+import UsersPage from '@/pages/UsersPage';
+import HabitsPage from '@/pages/HabitsPage';
+import ChallengesPage from '@/pages/ChallengesPage';
+import UserHabitsPage from '@/pages/UserHabitsPage';
+import ChallengeParticipantsPage from '@/pages/ChallengeParticipantsPage';
+import ChallengeEntriesPage from '@/pages/ChallengeEntriesPage';
+import ChallengeDetailPage from '@/pages/ChallengeDetailPage';
+import HabitCalendarPage from '@/pages/HabitCalendarPage';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfService from '@/pages/TermsOfService';
+import CookieSettings from '@/pages/CookieSettings';
+import LoginSignupPage from '@/pages/LoginSignupPage';
+import BlogPage from '@/pages/BlogPage';
+
+// Styles
+import '@/App.css';
 
 function AppContent({ currentUser, setCurrentUser }) {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -52,13 +58,33 @@ function AppContent({ currentUser, setCurrentUser }) {
             <Route path="/auth" element={<LoginSignupPage setCurrentUser={setCurrentUser} />} />
             <Route path="/home" element={<HomePage sidebarExpanded={sidebarExpanded} />} />
             <Route path="/users" element={<UsersPage />} />
-            <Route path="/habits" element={<ProtectedRoute><HabitsPage /></ProtectedRoute>} />
+            {/* Habit Management Routes */}
+            <Route path="/habits" element={
+              <ProtectedRoute>
+                <HabitsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/habits/calendar" element={
+              <ProtectedRoute>
+                <HabitCalendarPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/habits/calendar/:userId" element={
+              <ProtectedRoute>
+                <HabitCalendarPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/user-habits" element={
+              <ProtectedRoute>
+                <UserHabitsPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Challenge Management Routes */}
             <Route path="/challenges" element={<ProtectedRoute><ChallengesPage /></ProtectedRoute>} />
-            <Route path="/user-habits" element={<UserHabitsPage />} />
-            <Route path="/challenges/:challengeId" element={<ProtectedRoute><ChallengeDetailPage /></ProtectedRoute>} /> {/* New Route */}
-            <Route path="/challenge-participants" element={<ChallengeParticipantsPage />} />
-            <Route path="/challenge-entries" element={<ChallengeEntriesPage />} />
-            <Route path="/habit-entries" element={<ProtectedRoute><HabitEntriesPage /></ProtectedRoute>} />
+            <Route path="/challenges/:challengeId" element={<ProtectedRoute><ChallengeDetailPage /></ProtectedRoute>} />
+            <Route path="/challenge-participants" element={<ProtectedRoute><ChallengeParticipantsPage /></ProtectedRoute>} />
+            <Route path="/challenge-entries" element={<ProtectedRoute><ChallengeEntriesPage /></ProtectedRoute>} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/cookies" element={<CookieSettings />} />
@@ -85,9 +111,11 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-       <Toaster position="top-right" reverseOrder={false} />
+        <Toaster position="top-right" reverseOrder={false} />
         <ToastConfig />
-        <AppContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <HabitsProvider>
+          <AppContent currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        </HabitsProvider>
       </Router>
     </ThemeProvider>
   );
